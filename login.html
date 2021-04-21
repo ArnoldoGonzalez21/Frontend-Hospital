@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Login Hospital</title>
+        <title>Login AG Hospital</title>
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
     </head>
@@ -18,7 +18,7 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-5">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">AGHospital - Inicio Sesión</h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">AG Hospital - Inicio Sesión</h3></div>
                                     <div class="card-body">
                                         <form>
                                             <div class="form-group">
@@ -54,10 +54,10 @@
                         // en data esta lo que llega
                         alert(data.mensaje)
                         if(data.estado == 1){
-                            window.location.href = "paginaPrincipal.html"
+                            window.location.href = "index.html"
                         }
                     }).catch(function(error){
-                        console.log(error); //manejar el error o imprimirlo en una alerta
+                        console.log(error); //imprimir error consola
                     });
                 }
             </script>
