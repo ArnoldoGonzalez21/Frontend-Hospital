@@ -30,7 +30,7 @@
                                                 <input class="form-control py-4" id="inputPassword" type="password" placeholder="Ingrese la Contraseña" />
                                             </div>
                                             <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="btn btn-primary" href="index.html">Login</a>
+                                                <a class="btn btn-primary" onclick="login()">Login</a>
                                             </div>                                            
                                         </form>
                                          <div class="card-footer text-center">
@@ -43,6 +43,24 @@
                     </div>
                 </main>
             </div>
+            <script>
+                function login(){
+                    //https://proyecto2-2021.herokuapp.com/login?nombre_usuario=admin&contrasena=1234
+                    const user = document.getElementById('inputNombreUsuario').value; <!--con esto obtengo el texto-->
+                    const contrasena = document.getElementById('inputPassword').value;
+                    const url = 'https://proyecto2-2021.herokuapp.com/'
+                    const ruta = url + 'login?nombre_usuario=' + user + '&contrasena=' + contrasena;
+                    fetch(ruta).then((resp) => resp.json()).then(function(data){
+                        // en data esta lo que llega
+                        alert(data.mensaje)
+                        if(data.estado == 1){
+                            window.location.href = "paginaPrincipal.html"
+                        }
+                    }).catch(function(error){
+                        console.log(error); //manejar el error o imprimirlo en una alerta
+                    });
+                }
+            </script>
             <div id="layoutAuthentication_footer">
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid">
