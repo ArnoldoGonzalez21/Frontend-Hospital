@@ -71,7 +71,7 @@
                                                 <label class="small mb-1" for="inputTelefono">Teléfono</label>
                                                 <input class="form-control py-4" id="inputTelefono" type="text" placeholder="Ingrese su Teléfono" />
                                             </div>
-                                            <div class="form-group mt-4 mb-0"><a class="btn btn-primary btn-block" onclick="register()">Registrarse</a></div>
+                                            <div class="form-group mt-4 mb-0"><a class="btn btn-primary btn-block" type= "submit" onclick="register()">Registrarse</a></div>
                                         </form>
                                     </div>                                
                                 </div>
@@ -81,7 +81,7 @@
                 </main>
             </div>
              <script>
-                function register(){
+                /*function register2(){
                     let xhr = new XMLHttpRequest();
                     var ruta = "https://proyecto2-2021.herokuapp.com/registro_paciente";
                     let json = JSON.stringify({
@@ -95,8 +95,38 @@
                     })
                     console.log(json)
                     xhr.open("POST",ruta)
-                    xhr.setRequestHeader('Content-type','application/json',charset='utf-8')
+                    xhr.setRequestHeader('Content-type','application/json;charset=utf-8')
                     xhr.send(json)
+                }*/
+                function register(){
+                    var ruta = "https://proyecto2-2021.herokuapp.com/registro_paciente";
+                    const datos = JSON.stringify({
+                        nombre: document.getElementById("inputNombre").value,
+                        apellido: document.getElementById("inputApellido").value,
+                        fecha_nacimiento: document.getElementById("inputFechaNacimiento").value,
+                        sexo: document.getElementById("inputSexo").value,
+                        nombre_usuario: document.getElementById("inputNombreUsuario").value,
+                        contrasena: document.getElementById("inputPassword").value,
+                        telefono: document.getElementById("inputTelefono").value,
+                    })
+                    const parametros={
+                        headers:{
+                            'content-type':'application/json; charset=UTF-8'
+                        },
+                        body: datos,
+                        method: 'POST',
+                    };
+                    fetch(ruta,parametros)
+                    .then(data=>{ return data.json()})
+                    .then(res=>{console.log(res)
+                        alert(res.mensaje)
+                        if(res.agregado == 1){
+                                window.location.href = "login.html"
+                        }else{
+                            window.location.href = "register.html"
+                        }
+                    })
+                    .then(error=>console.log(error))
                 }
             </script>
             
