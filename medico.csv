@@ -1,3 +1,5 @@
-Nombre,Apellido,Fecha,Sexo,Nombre,Contraseña,Teléfono
+nombre,apellido,fecha,sexo,nombre_usuario,contrasena,telefono
 Mario,Ortiz,06/05/1996,M,marito,9021,87288901
 Joaquin,Castallo,28/02/1990,M,joaqui,2891ds,89219032
+Ximena,Castallo,28/02/1990,M,xime,2891ds,89219032
+Karol,Menez,28/02/1990,M,kari,2891ds,89219032

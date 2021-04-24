@@ -109,7 +109,7 @@
                                         <input type="file"
                                             id="arhivoCSVMedicamento" name="arch"
                                             accept=".csv">
-                                        <a onclick='m()' class="btn btn-danger">Carga Masiva</a>
+                                        <a class="btn btn-danger">Carga Masiva</a>
                                     </div>
                                 </div>
                             </div>
@@ -118,35 +118,96 @@
                     <form class="form-inline">
                         <div class="form-group">
                             <label for="files">Upload a CSV formatted file:</label>
-                            <input type="file" id="files" class="form-control" />
+                            <input type="file" id="file" class="form-control"/>
                         </div>
                         <div class="form-group">
-                            <button type="submit" id="submit-file" class="btn btn-primary">Upload File</button>
+                            <button id="submit-file" class="btn btn-primary">Upload File</button>
                         </div>                        
                     </form>
                 </main>
                 
                 <script>
-                function m(){
-                    //https://proyecto2-2021.herokuapp.com/leer_csv/
-                     const nombre = JSON.stringify({
-                        ruta: document.getElementById('arhivoCSVMedicamento').value,
-                    })
-                    const ruta = 'https://proyecto2-2021.herokuapp.com/leer_csv';
-                    const parametros={
-                        headers:{
-                            'content-type':'application/json; charset=utf-8'
-                        },
-                        body: nombre,
-                        method: 'POST',
-                    };
-                    fetch(ruta,parametros)
-                    .then(data=>{ return data.json()})
-                    .then(res=>{console.log(res)
-                    console.log('res.agregado')
-                    })
-                    .then(error=>console.log(error))
-                }
+                    function register_enfermera(en_nombre, en_apell, en_fecha,en_sexo, en_user, en_contra, en_tel){
+                        var ruta = "https://proyecto2-2021.herokuapp.com/registro_enfermera";
+                        const datos = JSON.stringify({
+                            nombre: en_nombre,
+                            apellido: en_apell,
+                            fecha_nacimiento: en_fecha,
+                            sexo: en_sexo,
+                            nombre_usuario: en_user,
+                            contrasena: en_contra,
+                            telefono: en_tel,
+                        })
+                        const parametros={
+                            headers:{
+                                'content-type':'application/json; charset=utf-8'
+                            },
+                            body: datos,
+                            method: 'POST',
+                        };
+                        fetch(ruta,parametros)
+                        .then(data=>{ return data.json()})
+                        .then(res=>{console.log(res)
+                            if(res.agregado == 2){
+                                console.log(res.mensaje)
+                            }else{
+                                console.log(res.mensaje)
+                            }
+                        })
+                        .then(error=>console.log(error))
+                    }
+
+                    function leer_Archivo(evt) {
+                        let file = evt.target.files[0];
+                        let reader = new FileReader();
+                        reader.onload = (e) => {
+                            // Cuando el archivo se terminó de cargar
+                            let lines = manipular_csv(e.target.result);
+                            let salida = convertir_matriz(lines);
+                            for (var i = 1; i < salida[0].length; i++) {
+                                nombre_salida = salida[0][i];
+                                apellido_salida = salida[1][i];
+                                fecha_nacimiento_salida = salida[2][i];
+                                sexo_salida = salida[3][i];
+                                nombre_usuario_salida = salida[4][i];
+                                contrasena_salida = salida[5][i];
+                                telefono_salida = salida[6][i];
+                                let reg = register_enfermera(nombre_salida, apellido_salida,
+                                fecha_nacimiento_salida, sexo_salida, nombre_usuario_salida, 
+                                contrasena_salida, telefono_salida);
+                            }
+                            console.log(salida);
+                            alert('Archivo agregado con éxito')
+                        };
+                        // Leemos el contenido del archivo seleccionado
+                        reader.readAsBinaryString(file);
+                    }
+
+                    function manipular_csv(text) {
+                        // Obtenemos las lineas del texto
+                        let lines = text.replace(/\r/g, '').split('\n');
+                        return lines.map(line => {
+                            // Por cada linea obtenemos los valores
+                            let values = line.split(',');
+                            return values;
+                        });
+                    }
+
+                    function convertir_matriz(matrix){
+                        let salida = [];
+                        // Por cada fila
+                        matrix.forEach((values, row) => {
+                            // Vemos los valores y su posicion
+                            values.forEach((value, col) => {
+                            // Si la posición aún no fue creada
+                            if (salida[col] === undefined) salida[col] = [];
+                            salida[col][row] = value;
+                            });
+                        });
+                        return salida;
+                    }
+
+                    document.getElementById('file').addEventListener('change', leer_Archivo, false); 
                 </script>
                 
 
