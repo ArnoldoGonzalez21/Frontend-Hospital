@@ -53,11 +53,15 @@
                     fetch(ruta).then((resp) => resp.json()).then(function(data){
                         // en data esta lo que llega
                         alert(data.mensaje)
-                        console.log(data.estado)
-                        console.log(data.mensaje)
-                        //if(data.estado == 1){
-                          //  window.location.href = "paciente.html"
-                        //}
+                        if(data.estado == 1){
+                            window.location.href = "paciente.html"
+                        }else if(data.estado == 2){
+                            window.location.href = "enfermera.html"
+                        }else if(data.estado == 3){
+                            window.location.href = "doctor.html"
+                        }else if(data.estado == 4){
+                            window.location.href = "index.html"
+                        }
                     }).catch(function(error){
                         console.log(error); //imprimir error consola
                     });
