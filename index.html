@@ -69,23 +69,17 @@
                                 <div class="card bg-success text-white mb-4">
                                     <div class="card-body">Pacientes</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <label for="arhivoCSVPaciente">Seleccionar Archivo:</label>
-                                        <input type="file"
-                                            id="arhivoCSVPaciente" name="arch"
-                                            accept=".csv">
-                                        <a class="btn btn-success" onclick = "cargaMasiva()">Carga Masiva</a>
+                                        <label for="fileCSVPaciente">Seleccionar Archivo:</label>
+                                        <input type="file" id="fileCSVPaciente" onclick = 'carga_masiva_paciente()'/>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">Médicos</div>
+                                    <div class="card-body">Doctores</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <label for="arhivoCSVMedico">Seleccionar Archivo:</label>
-                                        <input type="file"
-                                            id="arhivoCSVMedico" name="arch"
-                                            accept=".csv">
-                                        <a href="register.html" class="btn btn-primary">Carga Masiva</a>
+                                        <label for="fileCSVMedico">Seleccionar Archivo:</label>
+                                        <input type="file" id="fileCSVMedico" onclick = 'carga_masiva_doctor()'/>
                                     </div>
                                 </div>
                             </div>
@@ -93,11 +87,8 @@
                                 <div class="card bg-warning text-white mb-4">
                                     <div class="card-body">Enfermeras</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <label for="arhivoCSVEnfermera">Seleccionar Archivo:</label>
-                                        <input type="file"
-                                            id="arhivoCSVEnfermera" name="arch"
-                                            accept=".csv">
-                                        <a href="register.html" class="btn btn-warning">Carga Masiva</a>
+                                        <label for="fileCSVEnfermera">Seleccionar Archivo:</label>
+                                        <input type="file" id="fileCSVEnfermera" onclick = 'carga_masiva_enfermera()'/>
                                     </div>
                                 </div>
                             </div>
@@ -105,11 +96,8 @@
                                 <div class="card bg-danger text-white mb-4">
                                     <div class="card-body">Medicamentos</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <label for="arhivoCSVMedicamento">Seleccionar Archivo:</label>
-                                        <input type="file"
-                                            id="arhivoCSVMedicamento" name="arch"
-                                            accept=".csv">
-                                        <a class="btn btn-danger">Carga Masiva</a>
+                                        <label for="fileCSVMedicamento">Seleccionar Archivo:</label>
+                                        <input type="file" id="fileCSVMedicamento" onclick = 'carga_masiva_medicamento()'/>
                                     </div>
                                 </div>
                             </div>
@@ -127,8 +115,11 @@
                 </main>
                 
                 <script>
-                    function register_enfermera(en_nombre, en_apell, en_fecha,en_sexo, en_user, en_contra, en_tel){
-                        var ruta = "https://proyecto2-2021.herokuapp.com/registro_enfermera";
+                    extension = '';
+                    /*------------------------Registro Pacientes, Doctores, Enfermeras-------------------------*/
+                    function register_personal(en_nombre, en_apell, en_fecha,en_sexo, en_user, en_contra, en_tel){
+                        var url = "https://proyecto2-2021.herokuapp.com";
+                        var ruta = url + extension;
                         const datos = JSON.stringify({
                             nombre: en_nombre,
                             apellido: en_apell,
@@ -148,11 +139,7 @@
                         fetch(ruta,parametros)
                         .then(data=>{ return data.json()})
                         .then(res=>{console.log(res)
-                            if(res.agregado == 2){
-                                console.log(res.mensaje)
-                            }else{
-                                console.log(res.mensaje)
-                            }
+                            console.log(res.mensaje)
                         })
                         .then(error=>console.log(error))
                     }
@@ -172,17 +159,18 @@
                                 nombre_usuario_salida = salida[4][i];
                                 contrasena_salida = salida[5][i];
                                 telefono_salida = salida[6][i];
-                                let reg = register_enfermera(nombre_salida, apellido_salida,
+                                let reg = register_personal(nombre_salida, apellido_salida,
                                 fecha_nacimiento_salida, sexo_salida, nombre_usuario_salida, 
                                 contrasena_salida, telefono_salida);
                             }
                             console.log(salida);
-                            alert('Archivo agregado con éxito')
+                            alert('Archivo agregado con exito')
                         };
                         // Leemos el contenido del archivo seleccionado
                         reader.readAsBinaryString(file);
                     }
 
+                    /*------------------------Métodos CSV-------------------------*/
                     function manipular_csv(text) {
                         // Obtenemos las lineas del texto
                         let lines = text.replace(/\r/g, '').split('\n');
@@ -207,10 +195,70 @@
                         return salida;
                     }
 
-                    document.getElementById('file').addEventListener('change', leer_Archivo, false); 
+                    /*------------------------Métodos Listener-------------------------*/
+                    function carga_masiva_paciente(){
+                        document.getElementById('fileCSVPaciente').addEventListener('change', leer_Archivo, false); 
+                        extension = '/registro_paciente';
+                    }
+                    function carga_masiva_enfermera(){ 
+                        document.getElementById('fileCSVEnfermera').addEventListener('change', leer_Archivo, false); 
+                        extension = '/registro_enfermera';
+                    }
+                     function carga_masiva_doctor(){ 
+                        document.getElementById('fileCSVMedico').addEventListener('change', leer_Archivo, false); 
+                        extension = '/registro_doctor';
+                    }
+                    function carga_masiva_medicamento(){
+                        document.getElementById('fileCSVMedicamento').addEventListener('change', leer_Archivo_Medicamento, false); 
+                    }
+
+                    /*------------------------Registro Medicamentos-------------------------*/
+                    function register_medicamento(en_nombre, en_precio, en_descrip, en_cant){
+                        var ruta = "https://proyecto2-2021.herokuapp.com/registro_medicamento";
+                        const datos = JSON.stringify({
+                            nombre: en_nombre,
+                            precio: en_precio,
+                            descripcion: en_descrip,
+                            cantidad: en_cant,
+                        })
+                        const parametros={
+                            headers:{
+                                'content-type':'application/json; charset=utf-8'
+                            },
+                            body: datos,
+                            method: 'POST',
+                        };
+                        fetch(ruta,parametros)
+                        .then(data=>{ return data.json()})
+                        .then(res=>{console.log(res)
+                            console.log(res.mensaje)
+                        })
+                        .then(error=>console.log(error))
+                    }
+
+                    function leer_Archivo_Medicamento(evt) {
+                        let fileMed = evt.target.files[0];
+                        let readerMed = new FileReader();
+                        readerMed.onload = (e) => {
+                            // Cuando el archivo se terminó de cargar
+                            let lines = manipular_csv(e.target.result);
+                            let salida = convertir_matriz(lines);
+                            for (var i = 1; i < salida[0].length; i++) {
+                                nombre_salida = salida[0][i];
+                                precio_salida = salida[1][i];
+                                descripcion_salida = salida[2][i];
+                                cantidad_salida = salida[3][i];
+                                let reg = register_medicamento(nombre_salida,precio_salida,
+                                descripcion_salida,cantidad_salida);
+                            }
+                            console.log(salida);
+                            alert('Archivo agregado con exito')
+                        };
+                        // Leemos el contenido del archivo seleccionado
+                        readerMed.readAsBinaryString(fileMed);
+                    }
                 </script>
                 
-
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid">
                         <div class="d-flex align-items-center justify-content-between small">
