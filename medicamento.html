@@ -13,7 +13,7 @@
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <a class="navbar-brand" href="index.html">Proyecto 2 - IPC 1</a>
+            <a class="navbar-brand">Proyecto 2 - IPC 1</a>
             <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
             <!-- Navbar-->
             <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
@@ -35,19 +35,19 @@
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Opciones</div>
                             <a class="nav-link">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-user-injured"></i></div>
                                 Pacientes
                             </a>
                             <a class="nav-link collapsed">
-                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-user-md"></i></div>
                                 Médicos
                             </a>
                             <a class="nav-link collapsed">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-syringe"></i></div>
                                 Enfermeras
                             </a>
-                            <a class="nav-link collapsed">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            <a class="nav-link collapsed" href="medicamento.html">
+                                <div class="sb-nav-link-icon"><i href='medicamento.html' class="fas fa-pills"></i></div>
                                 Medicamentos
                             </a>
                         </div>
@@ -65,48 +65,69 @@
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Pasión por la curación</li>
                         </ol>
-                        <h4 class="mt-4">Medicina</h4>
-                        <div class="row">
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-success text-white mb-4">
-                                    <div class="card-body">Pacientes</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a href="login.html" class="btn btn-success">Seleccionar Archivo</a>
-                                        <a href="register.html" class="btn btn-success">Carga Masiva</a>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">Médicos</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a href="login.html" class="btn btn-primary">Seleccionar Archivo</a>
-                                        <a href="register.html" class="btn btn-primary">Carga Masiva</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-warning text-white mb-4">
-                                    <div class="card-body">Enfermeras</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a href="login.html" class="btn btn-warning">Seleccionar Archivo</a>
-                                        <a href="register.html" class="btn btn-warning">Carga Masiva</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">Medicamentos</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a href="login.html" class="btn btn-danger">Seleccionar Archivo</a>
-                                        <a href="register.html" class="btn btn-danger">Carga Masiva</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <h4 class="mt-4">Medicamentos</h4>
+                        <div class="table-responsive" id="tablaMedicamento"></div>
+                        <a class="btn btn-primary" onclick="crearPDF()">Generar PDF</a>
+                        <div class="table-responsive" id="tablaOcultaPDF" style="visibility: hidden;"></div>
                     </div>
                 </main>
+                <script>
+                var antes = `<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Descripción</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Descripción</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>`
+                var despues = `</tbody>
+                </table>`
+                let xhr = new XMLHttpRequest();
+                var ruta = "https://proyecto2-2021.herokuapp.com/obtener_medicamento";
+                xhr.open('GET', ruta);
+                xhr.send()
+                xhr.onreadystatechange = (e) => {
+                    var medicamentos = JSON.parse(xhr.responseText);
+                    var cuerpo = "";
+                    var cuerpo2 = "";
+                    for (var i = 0; i < medicamentos.length; i++) {
+                        cuerpo += '<tr>';
+                        cuerpo2 += '<tr>';
+                        cuerpo += '<td>' + medicamentos[i].nombre + '</td>';
+                        cuerpo2 += '<td>' + medicamentos[i].nombre + '</td>';
+                        cuerpo += '<td>' + medicamentos[i].precio + '</td>';
+                        cuerpo2 += '<td>' + medicamentos[i].precio + '</td>';
+                        cuerpo += '<td>' + medicamentos[i].descripcion + '</td>';
+                        cuerpo2 += '<td>' + medicamentos[i].descripcion + '</td>';
+                        cuerpo += '<td>' + medicamentos[i].cantidad + '</td>';
+                        cuerpo2 += '<td>' + medicamentos[i].cantidad + '</td>';
+                        cuerpo += '<td><a type="button" class="btn btn-success" href="modificarMedicamento.html?indice=' + i + '"><i class="fas fa-edit"></i></a></td>';
+                        cuerpo += '<td><a type="button" class="btn btn-danger" href="eliminarMedicamento.html?indice=' + i + '">Eliminar</a></td>';
+                        cuerpo += '</tr>';
+                        cuerpo2 += '</tr>';
+                    }
+                    document.getElementById("tablaMedicamento").innerHTML = antes + cuerpo + despues;
+                    document.getElementById("tablaOcultaPDF").innerHTML = antes + cuerpo2 + despues;
+                }
+
+                function crearPDF(){
+                    console.log('crear')
+                    var pdf = new jsPDF();
+                    pdf.fromHTML($('#tablaOcultaPDF').get(0),10,10,{'width':180});
+                    pdf.autoPrint();
+                    pdf.output("dataurlnewwindow")
+                }
+                </script>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid">
                         <div class="d-flex align-items-center justify-content-between small">
