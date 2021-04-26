@@ -7,8 +7,16 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Registro</title>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
+
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+    
+    
     </head>
     <body class="bg-primary">
         <div id="layoutAuthentication">
@@ -20,7 +28,7 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">AG Hospital - Registro del Paciente</h3></div>
                                     <div class="card-body">
-                                        <form>
+                                        <form id="form">
                                             <div class="form-row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -35,44 +43,37 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label class="small mb-1" for="inputFechaNacimiento">Fecha de Nacimiento</label>
-                                                <input class="form-control py-4" id="inputFechaNacimiento" type="text" placeholder="Ingrese su Fecha de Nacimiento" />
-                                            </div>
-                                            <label class="small mb-1" for="inputSexo">Sexo</label>
-                                              <input class="form-control py-4" id="inputSexo" type="text" placeholder="Ingrese su sexo" />
-                                            <!-- Validar que eligió -->
                                             <div class="form-row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <div class="btn-group">
-                                                            <button type="button" class="btn btn-primary">Sexo</button>
-                                                            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                <span class="sr-only">Toggle Dropdown</span>
-                                                            </button>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item" href="#">Masculino</a>
-                                                                <a class="dropdown-item" href="#">Femenino</a>
-                                                            </div>
-                                                        </div>
+                                                        <label class="small mb-1" for="inputFechaNacimiento">Fecha de Nacimiento</label>
+                                                        <input id="inputFechaNacimiento" width="270"/>                               
                                                     </div>
                                                 </div>
-                                             </div>
-                                             <!--https://programacion.net/articulo/bootstrap_datetimepicker-_o_como_anadir_un_calendario_a_un_campo_input_1796-->
+                                                <div class="form-group">
+                                                    <label class="small mb-1" for="inputSexo">Sexo</label> </br>
+                                                    <form>
+                                                        <select class="btn btn-primary" id="inputSexo" name="inputSexo">
+                                                            <option value="0">Masculino</option>
+                                                            <option value="1">Femenino</option>                                             
+                                                        </select>
+                                                    </form> 
+                                                </div>
+                                            </div>                                            
                                             <div class="form-group">
                                                 <label class="small mb-1" for="inputNombreUsuario">Nombre de Usuario</label>
                                                 <input class="form-control py-4" id="inputNombreUsuario" type="text" placeholder="Ingrese su Nombre de Usuario" />
                                             </div>                                           
                                             <div class="form-group">
                                                 <label class="small mb-1" for="inputPassword">Contraseña</label>
-                                                <input class="form-control py-4" id="inputPassword" type="password" placeholder="Ingrese la Contraseña" />
+                                                <input class="form-control py-4" id="inputPassword" type="password" onClick="validar_tamano_contrasena()" placeholder="Ingrese su Contraseña" />
                                             </div> 
                                             <div class="form-group">
                                                 <label class="small mb-1" for="inputTelefono">Teléfono</label>
-                                                <input class="form-control py-4" id="inputTelefono" type="text" placeholder="Ingrese su Teléfono" />
+                                                <input class="form-control py-4" id="inputTelefono" type="text" onkeyup="this.value=validar_numero(this.value)" placeholder="Ingrese su Teléfono" />
                                             </div>
                                             <div class="form-group mt-4 mb-0"><a class="btn btn-primary btn-block" onclick="register()">Registrarse</a></div>
-                                        </form>
+                                        </form>                                         
                                     </div>                                
                                 </div>
                             </div>
@@ -80,7 +81,14 @@
                     </div>
                 </main>
             </div>
-             <script>
+            <script>
+
+                $('#inputFechaNacimiento').datepicker({
+                    uiLibrary: 'bootstrap'
+                });
+
+                
+    
                 /*function register2(){
                     let xhr = new XMLHttpRequest();
                     var ruta = "https://proyecto2-2021.herokuapp.com/registro_paciente";
@@ -99,38 +107,94 @@
                     xhr.send(json)
                 }*/
                 function register(){
-                    var ruta = "https://proyecto2-2021.herokuapp.com/registro_paciente";
-                    const datos = JSON.stringify({
-                        nombre: document.getElementById("inputNombre").value,
-                        apellido: document.getElementById("inputApellido").value,
-                        fecha_nacimiento: document.getElementById("inputFechaNacimiento").value,
-                        sexo: document.getElementById("inputSexo").value,
-                        nombre_usuario: document.getElementById("inputNombreUsuario").value,
-                        contrasena: document.getElementById("inputPassword").value,
-                        telefono: document.getElementById("inputTelefono").value,
-                    })
-                    const parametros={
-                        headers:{
-                            'content-type':'application/json; charset=utf-8'
-                        },
-                        body: datos,
-                        method: 'POST',
-                    };
-                    fetch(ruta,parametros)
-                    .then(data=>{ return data.json()})
-                    .then(res=>{console.log(res)
-                        alert(res.mensaje)
-                        if(res.agregado == 1){
-                                window.location.href = "login.html"
-                        }else{
-                            window.location.href = "register.html"
+                    if(validar_ingreso()){
+                        var ruta = "https://proyecto2-2021.herokuapp.com/registro_paciente";
+                        var combo = document.getElementById("inputSexo");
+                        var selected = combo.options[combo.selectedIndex].text;
+                        console.log(selected)
+                        const datos = JSON.stringify({
+                            nombre: document.getElementById("inputNombre").value,
+                            apellido: document.getElementById("inputApellido").value,
+                            fecha_nacimiento: document.getElementById("inputFechaNacimiento").value,
+                            sexo: selected,
+                            nombre_usuario: document.getElementById("inputNombreUsuario").value,
+                            contrasena: document.getElementById("inputPassword").value,
+                            telefono: document.getElementById("inputTelefono").value,
+                        })
+                        const parametros={
+                            headers:{
+                                'content-type':'application/json; charset=utf-8'
+                            },
+                            body: datos,
+                            method: 'POST',
+                        };
+                        fetch(ruta,parametros)
+                        .then(data=>{ return data.json()})
+                        .then(res=>{console.log(res)
+                            alert(res.mensaje)
+                            if(res.agregado == 1){
+                                    window.location.href = "login.html"
+                            }else{
+                                window.location.href = "register.html"
+                            }
+                        })
+                        .then(error=>console.log(error))
+                        }else {
+                            alert('Ingrese todos los Datos')
                         }
-                    })
-                    .then(error=>console.log(error))
+                    }
+            </script>
+            <script>
+                function validar_ingreso(){
+                    if(validar_tamano_contrasena()){
+                        ingreso_nombre = document.getElementById("inputNombre").value;
+                        if( ingreso_nombre == null || ingreso_nombre.length == 0 || /^\s+$/.test(ingreso_nombre) ) {
+                            return false;
+                        }
+                        ingreso_apellido = document.getElementById("inputApellido").value;
+                        if( ingreso_apellido == null || ingreso_apellido.length == 0 || /^\s+$/.test(ingreso_apellido) ) {
+                            return false;
+                        }
+                        ingreso_fecha = document.getElementById("inputFechaNacimiento").value;
+                        if( ingreso_fecha == null || ingreso_fecha.length == 0 || /^\s+$/.test(ingreso_fecha) ) {
+                            return false;
+                        }
+                        ingreso_sexo = document.getElementById("inputSexo").value;
+                        if( ingreso_sexo == null || ingreso_sexo.length == 0 || /^\s+$/.test(ingreso_sexo) ) {
+                            return false;
+                        }
+                        ingreso_user = document.getElementById("inputNombreUsuario").value;
+                        if( ingreso_user == null || ingreso_user.length == 0 || /^\s+$/.test(ingreso_user) ) {
+                            return false;
+                        }
+                        ingreso_password = document.getElementById("inputPassword").value;
+                        if( ingreso_password == null || ingreso_password.length == 0 || /^\s+$/.test(ingreso_password) ) {
+                            return false;
+                        }
+                        return true;
+                    }else{
+                        alert('La contraseña debe tener al menos 8 carácteres.');
+                    }
                 }
+                function validar_numero(string){
+                    var salida_numeros = '';
+                    var digitos = '1234567890'; 
+                    for (var i=0; i<string.length; i++)
+                    if (digitos.indexOf(string.charAt(i)) != -1) 
+                        salida_numeros += string.charAt(i);
+                    return salida_numeros;
+                }         
+
+                function validar_tamano_contrasena(){
+                    if(document.getElementById('inputPassword').value.length < 8) {
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }   
             </script>
             
-
+            <!--https://adminlte.io/themes/AdminLTE/pages/forms/general.html-->
             <div id="layoutAuthentication_footer">
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid">
