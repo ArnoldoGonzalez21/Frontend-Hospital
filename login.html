@@ -30,7 +30,7 @@
                                                 <input class="form-control py-4" id="inputPassword" type="password" placeholder="Ingrese la Contraseña" />
                                             </div>
                                             <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="btn btn-primary" onclick="posicion()">Login</a>
+                                                <a class="btn btn-primary" onclick="buscar()">Login</a>
                                             </div>                                            
                                         </form>
                                          <div class="card-footer text-center">
@@ -56,11 +56,41 @@
                             if(pacientes[i].nombre_usuario == document.getElementById('inputNombreUsuario').value){
                                 indice = i;
                                 console.log('indice'+indice)
-                                login(indice);
+                                
                             }
                         }
+                        login(indice);
                     }                    
                 }
+
+                function busqueda(extension){
+                    let xhr = new XMLHttpRequest();
+                    var ruta = "https://proyecto2-2021.herokuapp.com/obtener_"+extension;
+                    xhr.open('GET', ruta);
+                    xhr.send()
+                    xhr.onreadystatechange = (e) => {
+                        var personal = JSON.parse(xhr.responseText);
+                        for (var i = 0; i < personal.length; i++) {
+                            if(personal[i].nombre_usuario == document.getElementById('inputNombreUsuario').value){
+                                indice = i;
+                                
+                                console.log('indice'+indice)
+                            }
+                        }
+                        login(indice);
+                    }                    
+                }
+
+                function buscar(){
+                    busqueda('paciente');
+                    console.log('despues paciente')
+                    busqueda('enfermera');
+                    console.log('despues enfer')
+                    busqueda('doctor');
+                    console.log('despues doc')
+                    login(indice);
+                }
+
                 function login(indice){
                     const user = document.getElementById('inputNombreUsuario').value; 
                     const contrasena = document.getElementById('inputPassword').value;
@@ -68,22 +98,22 @@
                     const ruta = url + 'login?nombre_usuario=' + user + '&contrasena=' + contrasena;
                     fetch(ruta).then((resp) => resp.json()).then(function(data){
                         // en data esta lo que llega
-                        console.log('idn '+indice)
-                        
-                        if(data.estado == 1){
+                        if(data.estado == 0){
+                            alert(data.mensaje);
+                            location.reload();
+                        }
+                        else if(data.estado == 1){
                             alert(data.mensaje);
                             window.location.href = "paciente.html?indice="+indice;
                         }else if(data.estado == 2){
                             alert(data.mensaje);
-                            window.location.href = "enfermera.html"
+                            window.location.href = "enfermera.html?indice="+indice;
                         }else if(data.estado == 3){
                             alert(data.mensaje);
-                            window.location.href = "doctor.html"
+                            window.location.href = "doctor.html?indice="+indice;
                         }else if(data.estado == 4){
                             alert(data.mensaje);
                             window.location.href = "index.html"
-                        }else if(data.estado == 0){
-                            alert(data.mensaje);
                         }
                     }).catch(function(error){
                         console.log(error); //imprimir error consola
