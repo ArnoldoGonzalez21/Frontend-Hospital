@@ -63,7 +63,6 @@
                     }                    
                 }
                 
-                var entro =true;
                 function busqueda(extension){
                     var indice = -1;
                     let xhr = new XMLHttpRequest();
@@ -78,17 +77,15 @@
                                 login(indice);
                             }                      
                         }
-                        if(indice != -1){
-                            entro = false;
-                        }
                     }                 
                 }
                 function buscar(){
-                    busqueda('paciente');
-                    busqueda('enfermera');
-                    busqueda('doctor');
-                    if(!entro){
+                    if(document.getElementById('inputNombreUsuario').value == 'admin'){
                         login(-1);
+                    }else {
+                        busqueda('paciente');
+                        busqueda('enfermera');
+                        busqueda('doctor');
                     }
                 }
 

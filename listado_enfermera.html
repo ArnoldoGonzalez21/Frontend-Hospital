@@ -115,16 +115,17 @@
                         cuerpo += '<td>' + enfermeras[i].fecha_nacimiento + '</td>';
                         cuerpo2 += '<td>' + enfermeras[i].fecha_nacimiento + '</td>';
                         if(enfermeras[i].sexo.toUpperCase() == 'M'  || enfermeras[i].sexo.toUpperCase() == 'MASCULINO'){
-                            cuerpo += '<td>' + enfermeras[i].sexo + '</td>';
-                            cuerpo2 += '<td>' + enfermeras[i].sexo + '</td>';
+                            cuerpo += '<td> Masculino </td>';
+                            cuerpo2 += '<td> Masculino </td>';
                         }else if(enfermeras[i].sexo.toUpperCase() == 'F'  || enfermeras[i].sexo.toUpperCase() == 'FEMENINO'){
-                            cuerpo += '<td>' + enfermeras[i].sexo + '</td>';
-                            cuerpo2 += '<td>' + enfermeras[i].sexo + '</td>';
+                            cuerpo += '<td> Femenino </td>';
+                            cuerpo2 += '<td> Femenino </td>';
                         }
                         cuerpo += '<td>' + enfermeras[i].nombre_usuario + '</td>';
                         cuerpo2 += '<td>' + enfermeras[i].nombre_usuario + '</td>';
                         cuerpo += '<td>' + enfermeras[i].telefono + '</td>';
                         cuerpo2 += '<td>' + enfermeras[i].telefono + '</td>';
+                        cuerpo += '<td><a type="button" class="btn btn-warning" href="verPerfilAdmin.html?status=enfermera&indice=' + i + '"><i class="fas fa-eye"></i></a></td>';
                         cuerpo += '<td><a type="button" class="btn btn-success" href="modificarPerfilAdmin.html?status=enfermera&indice=' + i + '"><i class="fas fa-edit"></i></a></td>';
                         cuerpo += '<td><a type="button" class="btn btn-danger" href="eliminarPersonal.html?status=enfermera&indice=' + i + '">Eliminar</a></td>';
                         cuerpo += '</tr>';

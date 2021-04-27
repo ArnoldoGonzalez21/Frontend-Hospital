@@ -125,6 +125,7 @@
                         cuerpo2 += '<td>' + pacientes[i].nombre_usuario + '</td>';
                         cuerpo += '<td>' + pacientes[i].telefono + '</td>';
                         cuerpo2 += '<td>' + pacientes[i].telefono + '</td>';
+                        cuerpo += '<td><a type="button" class="btn btn-warning" href="verPerfilAdmin.html?status=paciente&indice=' + i + '"><i class="fas fa-eye"></i></a></td>';
                         cuerpo += '<td><a type="button" class="btn btn-success" href="modificarPerfilAdmin.html?status=paciente&indice=' + i + '"><i class="fas fa-edit"></i></a></td>';
                         cuerpo += '<td><a type="button" class="btn btn-danger" href="eliminarPersonal.html?status=paciente&indice=' + i + '">Eliminar</a></td>';
                         cuerpo += '</tr>';
