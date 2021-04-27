@@ -44,8 +44,9 @@
                 </main>
             </div>
             <script>
-            var indice = -1;
-                function posicion(){
+            
+                function posicion_paciente(){
+                    var indice = -1;
                     let xhr = new XMLHttpRequest();
                     var ruta = "https://proyecto2-2021.herokuapp.com/obtener_paciente";
                     xhr.open('GET', ruta);
@@ -56,14 +57,15 @@
                             if(pacientes[i].nombre_usuario == document.getElementById('inputNombreUsuario').value){
                                 indice = i;
                                 console.log('indice'+indice)
-                                
                             }
                         }
                         login(indice);
                     }                    
                 }
-
+                
+                var no_existe =true;
                 function busqueda(extension){
+                    var indice = -1;
                     let xhr = new XMLHttpRequest();
                     var ruta = "https://proyecto2-2021.herokuapp.com/obtener_"+extension;
                     xhr.open('GET', ruta);
@@ -73,25 +75,28 @@
                         for (var i = 0; i < personal.length; i++) {
                             if(personal[i].nombre_usuario == document.getElementById('inputNombreUsuario').value){
                                 indice = i;
-                                
-                                console.log('indice'+indice)
-                            }
+                                login(indice);
+                            }                      
                         }
-                        login(indice);
-                    }                    
+                        if(indice != -1){
+                            no_existe=false;
+                            console.log('u '+u)
+                            console.log('indice...!!!'+indice);
+                            
+                        }
+                    }                 
                 }
-
                 function buscar(){
                     busqueda('paciente');
-                    console.log('despues paciente')
                     busqueda('enfermera');
-                    console.log('despues enfer')
                     busqueda('doctor');
-                    console.log('despues doc')
-                    login(indice);
+                    if(no_existe){
+                        console.log(u);
+                        login(-1);
+                    }
                 }
 
-                function login(indice){
+                function login(posicionArreglo){
                     const user = document.getElementById('inputNombreUsuario').value; 
                     const contrasena = document.getElementById('inputPassword').value;
                     const url = 'https://proyecto2-2021.herokuapp.com/'
@@ -104,13 +109,13 @@
                         }
                         else if(data.estado == 1){
                             alert(data.mensaje);
-                            window.location.href = "paciente.html?indice="+indice;
+                            window.location.href = "paciente.html?indice="+posicionArreglo;
                         }else if(data.estado == 2){
                             alert(data.mensaje);
-                            window.location.href = "enfermera.html?indice="+indice;
+                            window.location.href = "enfermera.html?indice="+posicionArreglo;
                         }else if(data.estado == 3){
                             alert(data.mensaje);
-                            window.location.href = "doctor.html?indice="+indice;
+                            window.location.href = "doctor.html?indice="+posicionArreglo;
                         }else if(data.estado == 4){
                             alert(data.mensaje);
                             window.location.href = "index.html"
