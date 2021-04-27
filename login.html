@@ -63,7 +63,7 @@
                     }                    
                 }
                 
-                var no_existe =true;
+                var entro =true;
                 function busqueda(extension){
                     var indice = -1;
                     let xhr = new XMLHttpRequest();
@@ -79,10 +79,7 @@
                             }                      
                         }
                         if(indice != -1){
-                            no_existe=false;
-                            console.log('u '+u)
-                            console.log('indice...!!!'+indice);
-                            
+                            entro = false;
                         }
                     }                 
                 }
@@ -90,8 +87,7 @@
                     busqueda('paciente');
                     busqueda('enfermera');
                     busqueda('doctor');
-                    if(no_existe){
-                        console.log(u);
+                    if(!entro){
                         login(-1);
                     }
                 }
