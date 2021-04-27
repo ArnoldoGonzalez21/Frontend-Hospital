@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Medicamento</title>
+        <title>Listado Enfermeras</title>
         <link href="css/styles.css" rel="stylesheet" />
         <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
@@ -23,7 +23,7 @@
                         <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                             <a class="dropdown-item" href="login.html">Cerrar Sesión</a>
-                            <a class="dropdown-item" href="paciente.html">Regresar</a>                            
+                            <a class="dropdown-item" href="index.html">Regresar</a>                            
                         </div>
                     </li>
                 </ul>
@@ -35,16 +35,16 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Opciones</div>
-                            <a class="nav-link" href='listadoPaciente.html'>
-                                <div class="sb-nav-link-icon"><i href='listadoPaciente.html' class="fas fa-user-injured"></i></div>
+                            <a class="nav-link" href='listado_paciente.html'>
+                                <div class="sb-nav-link-icon"><i href='listado_paciente.html' class="fas fa-user-injured"></i></div>
                                 Pacientes
                             </a>
-                            <a class="nav-link collapsed" href='listadoDoctor.html'>
-                                <div class="sb-nav-link-icon"><i href='listadoDoctor.html' class="fas fa-user-md"></i></div>
+                            <a class="nav-link collapsed" href='listado_doctor.html'>
+                                <div class="sb-nav-link-icon"><i href='listado_doctor.html' class="fas fa-user-md"></i></div>
                                 Médicos
                             </a>
-                            <a class="nav-link collapsed" href='listadoEnfermera.html'>
-                                <div class="sb-nav-link-icon"><i href='listadoEnfermera.html' class="fas fa-syringe"></i></div>
+                            <a class="nav-link collapsed" href='listado_enfermera.html'>
+                                <div class="sb-nav-link-icon"><i href='listado_enfermera.html' class="fas fa-syringe"></i></div>
                                 Enfermeras
                             </a>
                             <a class="nav-link collapsed" href="medicamento.html">
@@ -66,7 +66,7 @@
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Pasión por la curación</li>
                         </ol>
-                        <h4 class="mt-4">Medicamentos</h4>
+                        <h4 class="mt-4">Enfermeras</h4>
                         <div class="table-responsive" id="tablaMedicamento"></div>
                         <a class="btn btn-primary" onclick="crearPDF()">Generar PDF</a>
                         <div class="table-responsive" id="tablaOcultaPDF" style="visibility: hidden;"></div>
@@ -77,43 +77,56 @@
                     <thead>
                         <tr>
                             <th>Nombre</th>
-                            <th>Precio</th>
-                            <th>Descripción</th>
-                            <th>Cantidad</th>
+                            <th>Apellido</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Sexo</th>
+                            <th>Nombre de Usuario</th>
+                            <th>Teléfono</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
                             <th>Nombre</th>
-                            <th>Precio</th>
-                            <th>Descripción</th>
-                            <th>Cantidad</th>
+                            <th>Apellido</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Sexo</th>
+                            <th>Nombre de Usuario</th>
+                            <th>Teléfono</th>
                         </tr>
                     </tfoot>
                     <tbody>`
                 var despues = `</tbody>
                 </table>`
                 let xhr = new XMLHttpRequest();
-                var ruta = "https://proyecto2-2021.herokuapp.com/obtener_medicamento";
+                var ruta = "https://proyecto2-2021.herokuapp.com/obtener_enfermera";
                 xhr.open('GET', ruta);
                 xhr.send()
                 xhr.onreadystatechange = (e) => {
-                    var medicamentos = JSON.parse(xhr.responseText);
+                    var enfermeras = JSON.parse(xhr.responseText);
                     var cuerpo = "";
                     var cuerpo2 = "";
-                    for (var i = 0; i < medicamentos.length; i++) {
+                    for (var i = 0; i < enfermeras.length; i++) {
                         cuerpo += '<tr>';
                         cuerpo2 += '<tr>';
-                        cuerpo += '<td>' + medicamentos[i].nombre + '</td>';
-                        cuerpo2 += '<td>' + medicamentos[i].nombre + '</td>';
-                        cuerpo += '<td>' + medicamentos[i].precio + '</td>';
-                        cuerpo2 += '<td>' + medicamentos[i].precio + '</td>';
-                        cuerpo += '<td>' + medicamentos[i].descripcion + '</td>';
-                        cuerpo2 += '<td>' + medicamentos[i].descripcion + '</td>';
-                        cuerpo += '<td>' + medicamentos[i].cantidad + '</td>';
-                        cuerpo2 += '<td>' + medicamentos[i].cantidad + '</td>';
-                        cuerpo += '<td><a type="button" class="btn btn-success" href="modificarMedicamento.html?indice=' + i + '"><i class="fas fa-edit"></i></a></td>';
-                        cuerpo += '<td><a type="button" class="btn btn-danger" href="eliminarMedicamento.html?indice=' + i + '">Eliminar</a></td>';
+                        cuerpo += '<td>' + enfermeras[i].nombre + '</td>';
+                        cuerpo2 += '<td>' + enfermeras[i].nombre + '</td>';
+                        cuerpo += '<td>' + enfermeras[i].apellido + '</td>';
+                        cuerpo2 += '<td>' + enfermeras[i].apellido + '</td>';
+                        cuerpo += '<td>' + enfermeras[i].fecha_nacimiento + '</td>';
+                        cuerpo2 += '<td>' + enfermeras[i].fecha_nacimiento + '</td>';
+                        if(enfermeras[i].sexo.toUpperCase() == 'M'  || enfermeras[i].sexo.toUpperCase() == 'MASCULINO'){
+                            cuerpo += '<td>' + enfermeras[i].sexo + '</td>';
+                            cuerpo2 += '<td>' + enfermeras[i].sexo + '</td>';
+                        }else if(enfermeras[i].sexo.toUpperCase() == 'F'  || enfermeras[i].sexo.toUpperCase() == 'FEMENINO'){
+                            cuerpo += '<td>' + enfermeras[i].sexo + '</td>';
+                            cuerpo2 += '<td>' + enfermeras[i].sexo + '</td>';
+                        }
+                        cuerpo += '<td>' + enfermeras[i].nombre_usuario + '</td>';
+                        cuerpo2 += '<td>' + enfermeras[i].nombre_usuario + '</td>';
+                        cuerpo += '<td>' + enfermeras[i].telefono + '</td>';
+                        cuerpo2 += '<td>' + enfermeras[i].telefono + '</td>';
+                        cuerpo += '<td><a type="button" class="btn btn-success" href="modificarPerfilAdmin.html?status=enfermera&indice=' + i + '"><i class="fas fa-edit"></i></a></td>';
+                        cuerpo += '<td><a type="button" class="btn btn-danger" href="eliminarPersonal.html?status=enfermera&indice=' + i + '">Eliminar</a></td>';
                         cuerpo += '</tr>';
                         cuerpo2 += '</tr>';
                     }
