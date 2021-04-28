@@ -78,13 +78,13 @@
                         <tbody>`
                     var despues = `</tbody>
                     </table>`
-                    
+                    var citas;
                     let xhr = new XMLHttpRequest();
                     var ruta = "https://proyecto2-2021.herokuapp.com/obtener_cita";
                     xhr.open('GET', ruta);
                     xhr.send()
                     xhr.onreadystatechange = (e) => {
-                        var citas = JSON.parse(xhr.responseText);
+                        citas = JSON.parse(xhr.responseText);
                         var cuerpo = "";
                         for (var i = 0; i < citas.length; i++) {
                             if(citas[i].estado == 0){
@@ -92,20 +92,49 @@
                                 cuerpo += '<td>' + citas[i].fecha + '</td>';
                                 cuerpo += '<td>' + citas[i].hora + '</td>';
                                 cuerpo += '<td>' + citas[i].motivo + '</td>';
-                                cuerpo += '<td><a type="button" class="btn btn-success" onclick = "agregar_carrito('+i+')">Aceptar</a></td>';
-                                cuerpo += '<td><a type="button" class="btn btn-danger" onclick = "agregar_carrito('+i+')">Rechazar</a></td>';
+                                cuerpo += '<td><a type="button" class="btn btn-success" onclick = "cambiar_datos('+i+')">Aceptar</a></td>';
+                                cuerpo += '<td><a type="button" class="btn btn-danger" onclick = "cambiar_datos('+i+')">Rechazar</a></td>';
                                 cuerpo += '</tr>';
                             }
                         }
                         document.getElementById("tablaMedicamento").innerHTML = antes + cuerpo + despues;
                     }
 
-                    function aceptar_cita(){
-                        
+                    function cambiar_datos(posicion_lista){
+                        var ruta = "https://proyecto2-2021.herokuapp.com/responder_cita";
+                        const datos = JSON.stringify({
+                            posicion : posicion_lista,
+                            indice: citas[posicion_lista].indice,
+                            fecha: citas[posicion_lista].fecha,
+                            hora: citas[posicion_lista].hora,
+                            motivo: citas[posicion_lista].motivo,
+                            estado: '2',
+                        })
+                        const parametros={
+                            headers:{
+                                'content-type':'application/json; charset=utf-8'
+                            },
+                                body: datos,
+                                method: 'POST',
+                            };
+                        fetch(ruta,parametros)
+                        .then(data=>{ return data.json()})
+                        .then(res=>{console.log(res)
+                        alert(res.mensaje)
+                            //location.reload();
+                        })
+                        .then(error=>console.log(error))
+                    }
+                    
+
+                    function aceptar_cita(posicion){
+                        citas[posicion].estado = 1;
+                        console.log(citas[posicion].fecha);
                     }
 
-                    function rechazar_cita(){
-
+                    function rechazar_cita(posicion){
+                        citas[posicion].estado = 3;
+                        console.log(citas[posicion].estado);
                     }
                     
                     function obtener_indice_parametro(indiceParametro) {
