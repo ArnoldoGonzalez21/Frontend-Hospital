@@ -22,7 +22,7 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-7">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">AG Hospital - Modificar Pefil del Paciente</h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">AG Hospital - Modificar Pefil</h3></div>
                                     <div class="card-body">
                                         <form id="form">
                                             <div class="form-row">
@@ -43,7 +43,7 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label class="small mb-1" for="inputFechaNacimiento">Fecha de Nacimiento</label>
-                                                        <input id="inputFechaNacimiento" width="270"/>                          
+                                                        <input id="inputFechaNacimiento" width="270" placeholder="Ingrese su Fecha de Nacimiento"/>                          
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -55,21 +55,25 @@
                                                         </select>
                                                     </form> 
                                                 </div>
-                                            </div>                                            
-                                            <div class="form-group">
-                                                <label class="small mb-1" for="inputNombreUsuario">Nombre de Usuario</label>
-                                                <input class="form-control py-4" id="inputNombreUsuario" type="text" placeholder="Ingrese su Nombre de Usuario" />
-                                            </div>                                           
-                                            <div class="form-group">
-                                                <label class="small mb-1" for="inputPassword">Contraseña</label>
-                                                <input class="form-control py-4" id="inputPassword" type="password" onClick="validar_tamano_contrasena()" placeholder="Ingrese su Contraseña" />
-                                            </div> 
-                                            <div class="form-group">
-                                                <label class="small mb-1" for="inputTelefono">Teléfono</label>
-                                                <input class="form-control py-4" id="inputTelefono" type="text" onkeyup="this.value=validar_numero(this.value)" placeholder="Ingrese su Teléfono" />
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-md-6">
+                                                     <div class="form-group">
+                                                        <label class="small mb-1" for="inputNombreUsuario">Nombre de Usuario</label>
+                                                        <input class="form-control py-4" id="inputNombreUsuario" type="text" placeholder="Ingrese su Nombre de Usuario" />
+                                                    </div> 
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="small mb-1" for="inputTelefono">Teléfono</label>
+                                                        <input class="form-control py-4" id="inputTelefono" type="text" onkeyup="this.value=validar_numero(this.value)" placeholder="Ingrese su Teléfono" />
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="form-group mt-4 mb-0"><a class="btn btn-primary btn-block" onclick="editar_perfil()">Modificar Perfil</a></div>
-                                        </form>                                         
+                                        </form>
+                                        <script>
+                                        </script>                                         
                                     </div>                                
                                 </div>
                             </div>
@@ -77,7 +81,7 @@
                     </div>
                 </main>
             </div>
-            <script>
+             <script>
                 $('#inputFechaNacimiento').datepicker({
                     format: 'dd/mm/yyyy',
                     uiLibrary: 'bootstrap'
@@ -87,10 +91,32 @@
                 function getParametro(nombreParametro) {
                     return (window.location.search.match(new RegExp('[?&]' + nombreParametro + '=([^&]+)')) || [, null])[1];
                 }
+                let contrasena_personal;
+                var status = getParametro('status'); // paciente doctor enfermera
+                var indiceURl = getParametro("indice");
+                let xhr = new XMLHttpRequest();
+                var ruta = "https://proyecto2-2021.herokuapp.com/obtener_"+status;
+                xhr.open('GET', ruta);
+                xhr.send()
+                xhr.onreadystatechange = (e) => {
+                    var personal = JSON.parse(xhr.responseText);
+                    nombre_personal = personal[indiceURl].nombre;                                                    
+                    $("#inputNombre").val(nombre_personal);
+                    apellido_personal =  personal[indiceURl].apellido;
+                    $("#inputApellido").val(apellido_personal);
+                    fecha_nacimiento_personal = personal[indiceURl].fecha_nacimiento;
+                    $("#inputFechaNacimiento").val(fecha_nacimiento_personal);
+                    contrasena_personal = personal[indiceURl].contrasena;
+                    nombre_usuario_personal = personal[indiceURl].nombre_usuario; 
+                    $("#inputNombreUsuario").val(nombre_usuario_personal);                                                             
+                    telefono_personal = personal[indiceURl].telefono;
+                    $("#inputTelefono").val(telefono_personal);
+                }
+                
                 async function editar_perfil() {
                     if(validar_ingreso()){
-                        var status = getParametro('status'); // paciente doctor enfermera
-                        var indiceURl = getParametro("indice");
+                       // var status = getParametro('status'); // paciente doctor enfermera
+                       // var indiceURl = getParametro("indice");
                         var combo = document.getElementById("inputSexo");
                         var selected = combo.options[combo.selectedIndex].text;
                         let json = JSON.stringify({
@@ -100,7 +126,7 @@
                             fecha_nacimiento: document.getElementById("inputFechaNacimiento").value,
                             sexo: selected,
                             nombre_usuario: document.getElementById("inputNombreUsuario").value,
-                            contrasena: document.getElementById("inputPassword").value,
+                            contrasena: contrasena_personal,
                             telefono: document.getElementById("inputTelefono").value,
                         })
                         let respuesta = await fetch("https://proyecto2-2021.herokuapp.com/editar_"+status, {
@@ -117,35 +143,27 @@
                 }
 
                 function validar_ingreso(){
-                    if(validar_tamano_contrasena()){
-                        ingreso_nombre = document.getElementById("inputNombre").value;
-                        if( ingreso_nombre == null || ingreso_nombre.length == 0 || /^\s+$/.test(ingreso_nombre) ) {
-                            return false;
-                        }
-                        ingreso_apellido = document.getElementById("inputApellido").value;
-                        if( ingreso_apellido == null || ingreso_apellido.length == 0 || /^\s+$/.test(ingreso_apellido) ) {
-                            return false;
-                        }
-                        ingreso_fecha = document.getElementById("inputFechaNacimiento").value;
-                        if( ingreso_fecha == null || ingreso_fecha.length == 0 || /^\s+$/.test(ingreso_fecha) ) {
-                            return false;
-                        }
-                        ingreso_sexo = document.getElementById("inputSexo").value;
-                        if( ingreso_sexo == null || ingreso_sexo.length == 0 || /^\s+$/.test(ingreso_sexo) ) {
-                            return false;
-                        }
-                        ingreso_user = document.getElementById("inputNombreUsuario").value;
-                        if( ingreso_user == null || ingreso_user.length == 0 || /^\s+$/.test(ingreso_user) ) {
-                            return false;
-                        }
-                        ingreso_password = document.getElementById("inputPassword").value;
-                        if( ingreso_password == null || ingreso_password.length == 0 || /^\s+$/.test(ingreso_password) ) {
-                            return false;
-                        }
-                        return true;
-                    }else{
-                        alert('La contraseña debe tener al menos 8 carácteres.');
+                    ingreso_nombre = document.getElementById("inputNombre").value;
+                    if( ingreso_nombre == null || ingreso_nombre.length == 0 || /^\s+$/.test(ingreso_nombre) ) {
+                        return false;
                     }
+                    ingreso_apellido = document.getElementById("inputApellido").value;
+                    if( ingreso_apellido == null || ingreso_apellido.length == 0 || /^\s+$/.test(ingreso_apellido) ) {
+                        return false;
+                    }
+                    ingreso_fecha = document.getElementById("inputFechaNacimiento").value;
+                    if( ingreso_fecha == null || ingreso_fecha.length == 0 || /^\s+$/.test(ingreso_fecha) ) {
+                        return false;
+                    }
+                    ingreso_sexo = document.getElementById("inputSexo").value;
+                    if( ingreso_sexo == null || ingreso_sexo.length == 0 || /^\s+$/.test(ingreso_sexo) ) {
+                        return false;
+                    }
+                    ingreso_user = document.getElementById("inputNombreUsuario").value;
+                    if( ingreso_user == null || ingreso_user.length == 0 || /^\s+$/.test(ingreso_user) ) {
+                        return false;
+                    }
+                    return true;
                 }
                 function validar_numero(string){
                     var salida_numeros = '';
@@ -154,15 +172,7 @@
                     if (digitos.indexOf(string.charAt(i)) != -1) 
                         salida_numeros += string.charAt(i);
                     return salida_numeros;
-                }         
-
-                function validar_tamano_contrasena(){
-                    if(document.getElementById('inputPassword').value.length < 8) {
-                        return false;
-                    }else{
-                        return true;
-                    }
-                }   
+                }      
             </script>
             <div id="layoutAuthentication_footer">
                 <footer class="py-4 bg-light mt-auto">
