@@ -56,16 +56,58 @@
                             <li class="breadcrumb-item active">Pasión por la curación</li>
                         </ol>
                         <h4 class="mt-4">Listado de Citas Pendientes</h4>
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="card-body">
-                                        
-                                </div>
-                            </div>
-                        </div>
+                        <div class="table-responsive" id="tablaMedicamento"></div>
                     </div>                
                 </main>
                 <script>
+                    var antes = `<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Motivo</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Motivo</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>`
+                    var despues = `</tbody>
+                    </table>`
+                    
+                    let xhr = new XMLHttpRequest();
+                    var ruta = "https://proyecto2-2021.herokuapp.com/obtener_cita";
+                    xhr.open('GET', ruta);
+                    xhr.send()
+                    xhr.onreadystatechange = (e) => {
+                        var citas = JSON.parse(xhr.responseText);
+                        var cuerpo = "";
+                        for (var i = 0; i < citas.length; i++) {
+                            if(citas[i].estado == 0){
+                                cuerpo += '<tr>';
+                                cuerpo += '<td>' + citas[i].fecha + '</td>';
+                                cuerpo += '<td>' + citas[i].hora + '</td>';
+                                cuerpo += '<td>' + citas[i].motivo + '</td>';
+                                cuerpo += '<td><a type="button" class="btn btn-success" onclick = "agregar_carrito('+i+')">Aceptar</a></td>';
+                                cuerpo += '<td><a type="button" class="btn btn-danger" onclick = "agregar_carrito('+i+')">Rechazar</a></td>';
+                                cuerpo += '</tr>';
+                            }
+                        }
+                        document.getElementById("tablaMedicamento").innerHTML = antes + cuerpo + despues;
+                    }
+
+                    function aceptar_cita(){
+                        
+                    }
+
+                    function rechazar_cita(){
+
+                    }
+                    
                     function obtener_indice_parametro(indiceParametro) {
                         var url = window.location.search.substring(1);
                         var sURLVariables = url.split('&');
