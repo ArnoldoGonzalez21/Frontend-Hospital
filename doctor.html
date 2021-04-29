@@ -32,9 +32,9 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Opciones</div>
-                            <a class="nav-link" href="harts.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Estado de la Cita
+                            <a class="nav-link" onclick="ir_citas_aceptadas()">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user-check"></i></div>
+                                Citas Aceptadas
                             </a>
                             <a class="nav-link" href="tables.html">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
@@ -55,17 +55,113 @@
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Pasión por la curación</li>
                         </ol>
-                        <h4 class="mt-4">Solicita una Cita</h4>
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="card-body">
-                                       
-                                </div>
-                            </div>
-                        </div>
+                        <h4 class="mt-4">Listado de Citas Pendientes</h4>
+                        <div class="table-responsive" id="tablaCitaPendiente"></div>
                     </div>                
                 </main>
                 <script>
+                    var antes = `<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Motivo</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Motivo</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>`
+                    var despues = `</tbody>
+                    </table>`
+                    var citas;
+                    let xhr = new XMLHttpRequest();
+                    var ruta = "https://proyecto2-2021.herokuapp.com/obtener_cita";
+                    xhr.open('GET', ruta);
+                    xhr.send()
+                    xhr.onreadystatechange = (e) => {
+                        citas = JSON.parse(xhr.responseText);
+                        var cuerpo = "";
+                        for (var i = 0; i < citas.length; i++) {
+                            if(citas[i].estado == 0){
+                                cuerpo += '<tr>';
+                                cuerpo += '<td>' + citas[i].fecha + '</td>';
+                                cuerpo += '<td>' + citas[i].hora + '</td>';
+                                cuerpo += '<td>' + citas[i].motivo + '</td>';
+                                cuerpo += '<td><a type="button" class="btn btn-success" onclick = "cambiar_datos('+i+',1)">Aceptar</a></td>';
+                                cuerpo += '<td><a type="button" class="btn btn-danger" onclick = "cambiar_datos('+i+',3)">Rechazar</a></td>';
+                                cuerpo += '</tr>';
+                            }
+                        }
+                        document.getElementById("tablaCitaPendiente").innerHTML = antes + cuerpo + despues;
+                    }
+
+                    function cambiar_datos(posicion_lista,estado_cita){
+                        var ruta = "https://proyecto2-2021.herokuapp.com/responder_cita";
+                        const datos = JSON.stringify({
+                            posicion : posicion_lista,
+                            indice: citas[posicion_lista].indice,
+                            fecha: citas[posicion_lista].fecha,
+                            hora: citas[posicion_lista].hora,
+                            motivo: citas[posicion_lista].motivo,
+                            estado: estado_cita,
+                        })
+                        const parametros={
+                            headers:{
+                                'content-type':'application/json; charset=utf-8'
+                            },
+                                body: datos,
+                                method: 'POST',
+                        };
+                        fetch(ruta,parametros)
+                        .then(data=>{ return data.json()})
+                        .then(res=>{console.log(res)
+                            alert(res.mensaje)
+                            location.reload();
+                        })
+                        .then(error=>console.log(error))
+
+                        if(estado_cita == 1){
+                            asignar_medico(posicion_lista);
+                        }
+                    }
+                    
+                    function getParametro(nombre) {
+                        return (window.location.search.match(new RegExp('[?&]' + nombre + '=([^&]+)')) || [, null])[1];
+                    }
+                    function ir_citas_aceptadas(){
+                        var indiceDoctor = getParametro('indice');
+                        window.location.href = "citasAceptadasDoctor.html?indice="+indiceDoctor;                            
+
+                    }
+
+                    function asignar_medico(posicion_lista){
+                        var indiceDoctor = getParametro('indice');
+                        var ruta = "https://proyecto2-2021.herokuapp.com/asignar_doctor";
+                        const datos = JSON.stringify({
+                            posicion : posicion_lista,
+                            indice: citas[posicion_lista].indice,
+                            doctor: indiceDoctor,
+                        })
+                        const parametros={
+                            headers:{
+                                'content-type':'application/json; charset=utf-8'
+                            },
+                                body: datos,
+                                method: 'POST',
+                        };
+                        fetch(ruta,parametros)
+                        .then(data=>{ return data.json()})
+                        .then(res=>{console.log(res)
+                            alert(res.mensaje)
+                        })
+                        .then(error=>console.log(error))
+                    }
+                    
                     function obtener_indice_parametro(indiceParametro) {
                         var url = window.location.search.substring(1);
                         var sURLVariables = url.split('&');
