@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Módulo Enfermera</title>
+        <title>Citas Aceptadas</title>
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
     </head>
@@ -34,7 +34,7 @@
                             <div class="sb-sidenav-menu-heading">Opciones</div>
                             <a class="nav-link" href="harts.html">
                                 <div class="sb-nav-link-icon"><i class="fas fa-user-check"></i></div>
-                               Citas Aceptadas
+                                Citas Aceptadas
                             </a>
                             <a class="nav-link">
                                 <div class="sb-nav-link-icon"><i class="fas fa-file-invoice"></i></div>
@@ -55,7 +55,7 @@
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Pasión por la curación</li>
                         </ol>
-                        <h4 class="mt-4">Listado de Citas Pendientes</h4>
+                        <h4 class="mt-4">Listado de Citas Aceptadas</h4>
                         <div class="table-responsive" id="tablaMedicamento"></div>
                     </div>                
                 </main>
@@ -66,6 +66,7 @@
                                 <th>Fecha</th>
                                 <th>Hora</th>
                                 <th>Motivo</th>
+                                <th>Médico</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -73,11 +74,23 @@
                                 <th>Fecha</th>
                                 <th>Hora</th>
                                 <th>Motivo</th>
+                                <th>Médico</th>
                             </tr>
                         </tfoot>
                         <tbody>`
                     var despues = `</tbody>
                     </table>`
+//-------------------------------------------------------------------------
+                    var doctores = [];
+                    let xhrdoc = new XMLHttpRequest();
+                    var rutadoc = "https://proyecto2-2021.herokuapp.com/obtener_doctor";
+                    xhrdoc.open('GET', rutadoc);
+                    xhrdoc.send()
+                    xhrdoc.onreadystatechange = (e) => {
+                        doctores = JSON.parse(xhrdoc.responseText);
+                    }
+//-------------------------------------------------------------------------
+
                     var citas;
                     let xhr = new XMLHttpRequest();
                     var ruta = "https://proyecto2-2021.herokuapp.com/obtener_cita";
@@ -87,28 +100,31 @@
                         citas = JSON.parse(xhr.responseText);
                         var cuerpo = "";
                         for (var i = 0; i < citas.length; i++) {
-                            if(citas[i].estado == 0){
+                            if(citas[i].estado == 1){
                                 cuerpo += '<tr>';
                                 cuerpo += '<td>' + citas[i].fecha + '</td>';
                                 cuerpo += '<td>' + citas[i].hora + '</td>';
                                 cuerpo += '<td>' + citas[i].motivo + '</td>';
-                                cuerpo += '<td><a type="button" class="btn btn-success" onclick = "cambiar_datos('+i+',1)">Aceptar</a></td>';
-                                cuerpo += '<td><a type="button" class="btn btn-danger" onclick = "cambiar_datos('+i+',3)">Rechazar</a></td>';
+                                cuerpo += '<td><select class="btn btn-primary" id="inputMedico" name="inputMedico">';
+                                for(var j = 0; j < doctores.length; j++){
+                                    cuerpo += '<option value="'+j+'">'+doctores[j].nombre +" "+ doctores[j].apellido+'</option>';    
+                                }
+                                cuerpo += '</select></td>'
+                                cuerpo += '<td><a type="button" class="btn btn-success" onclick = "asignar_medico('+i+')">Aceptar</a></td>';
                                 cuerpo += '</tr>';
                             }
                         }
                         document.getElementById("tablaMedicamento").innerHTML = antes + cuerpo + despues;
                     }
-
-                    function cambiar_datos(posicion_lista,estado_cita){
-                        var ruta = "https://proyecto2-2021.herokuapp.com/responder_cita";
+                    
+                    function asignar_medico(posicion_lista){
+                        var combo = document.getElementById("inputMedico");
+                        var selected = combo.options[combo.selectedIndex].value;
+                        var ruta = "https://proyecto2-2021.herokuapp.com/asignar_doctor";
                         const datos = JSON.stringify({
                             posicion : posicion_lista,
                             indice: citas[posicion_lista].indice,
-                            fecha: citas[posicion_lista].fecha,
-                            hora: citas[posicion_lista].hora,
-                            motivo: citas[posicion_lista].motivo,
-                            estado: estado_cita,
+                            doctor: selected,
                         })
                         const parametros={
                             headers:{
@@ -121,7 +137,6 @@
                         .then(data=>{ return data.json()})
                         .then(res=>{console.log(res)
                             alert(res.mensaje)
-                            location.reload();
                         })
                         .then(error=>console.log(error))
                     }
