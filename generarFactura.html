@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Generar Factura</title>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <link  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+        <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />      
+        <link href="css/styles.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="bg-primary">
+        <div id="layoutAuthentication">
+            <div id="layoutAuthentication_content">
+                <main>
+                    <span class="float-right">
+                        </br><a type="button" class="btn btn-danger" onclick = 'regresar()'><i class="far fa-hand-point-left"></i></a>
+                    </span> 
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-6">
+                                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">AG Hospital - Generar Factura al Paciente</h3></div>
+                                        <div class="card-body">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label class="small mb-1" for="inputFecha">Fecha</label>
+                                                    <input id="inputFecha" width="270" placeholder="Seleccione la Fecha"/>                               
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group">
+                                                        <div class="col-md-6">
+                                                            <label class="small mb-1" for="inputPaciente">Paciente</label> 
+                                                            <form>
+                                                                <select class="btn btn-primary" id="inputPaciente" name="inputPaciente">
+                                                                    <option ></option>                                            
+                                                                </select>                                             
+                                                            </form>  
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-md-6">
+                                                            <label class="small mb-1" for="inputMedico">Médico</label>
+                                                            <form>
+                                                                <select class="btn btn-primary" id="inputMedico" name="inputMedico">
+                                                                    <option ></option>                                            
+                                                                </select>
+                                                            </form>  
+                                                        </div>
+                                                    </div>
+                                                </div>    
+                                                <div class="form-group">
+                                                    <label class="small mb-1" for="inputPrecioConsulta">Precio Consulta ( Q )</label>
+                                                    <input class="form-control py-4" id="inputPrecioConsulta" type="number" placeholder="Ingrese el Precio de la Consulta" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="small mb-1" for="inputCostoOperacion">Costo Operación ( Q )</label>
+                                                    <input class="form-control py-4" id="inputCostoOperacion" type="number" placeholder="Ingrese el Costo de Operación" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="small mb-1" for="inputCostoInternado">Costo Internado ( Q )</label>
+                                                    <input class="form-control py-4" id="inputCostoInternado" type="number" placeholder="Ingrese el Costo Intermedio" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <span class="float-right"><label class="small mb-1" for="inputTotal">Total ( Q )</label>
+                                                    <input class="form-control py-4" id="inputTotal" type="number" onclick="total_factura()" placeholder="Click Ver Total" readonly/></span>
+                                                </div></br></br></br>
+                                                <span class="float-right">
+                                                    <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0" >
+                                                        <a class="btn btn-primary" onclick="generar_factura()">Generar</a>
+                                                    </div> 
+                                                </span>                                          
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            <script>
+                $('#inputFecha').datepicker({
+                    format: 'dd/mm/yyyy',
+                    uiLibrary: 'bootstrap'
+                });
+            </script>
+            <script>
+
+                var pacientes = [];
+                let xhrpac = new XMLHttpRequest();
+                var rutapac = "https://proyecto2-2021.herokuapp.com/obtener_paciente";
+                xhrpac.open('GET', rutapac);
+                xhrpac.send()
+                xhrpac.onreadystatechange = (e) => {
+                    pacientes = JSON.parse(xhrpac.responseText);
+                }
+
+                var doctores = [];
+                let xhrdoc = new XMLHttpRequest();
+                var rutadoc = "https://proyecto2-2021.herokuapp.com/obtener_doctor";
+                xhrdoc.open('GET', rutadoc);
+                xhrdoc.send()
+                xhrdoc.onreadystatechange = (e) => {
+                    doctores = JSON.parse(xhrdoc.responseText);
+                }
+
+                var citas;
+                let xhr = new XMLHttpRequest();
+                var ruta = "https://proyecto2-2021.herokuapp.com/obtener_cita";
+                xhr.open('GET', ruta);
+                xhr.send()
+                xhr.onreadystatechange = (e) => {
+                    citas = JSON.parse(xhr.responseText);
+                    var cuerpoDoc = "";
+                    var cuerpoPac = "";
+                    for (var i = 0; i < citas.length; i++) {
+                        if(citas[i].estado == 1){
+                            for(var k = 0; k < pacientes.length; k++){
+                                cuerpoPac += '<option value="'+k+'">'+pacientes[k].nombre +" "+ pacientes[k].apellido+'</option>';    
+                            }
+                            for(var j = 0; j < doctores.length; j++){
+                                cuerpoDoc += '<option value="'+j+'">'+doctores[j].nombre +" "+ doctores[j].apellido+'</option>';    
+                            }
+                            cuerpoDoc += '</select></form>';
+                            cuerpoPac += '</select></form>'
+                            }
+                        }
+                        document.getElementById("inputPaciente").innerHTML = cuerpoPac;
+                        document.getElementById("inputMedico").innerHTML = cuerpoDoc;
+                    }
+
+                function total_factura(){
+                    var total = 0;
+                    var precioConsulta = document.getElementById("inputPrecioConsulta").value;
+                    var costoOperacion = document.getElementById("inputCostoOperacion").value;
+                    var costoInternado = document.getElementById("inputCostoInternado").value;
+                    if( costoOperacion == null || costoOperacion.length == 0 || /^\s+$/.test(costoOperacion) ) {
+                        $("#inputCostoOperacion").val(0); 
+                    }
+                    if( costoInternado == null || costoInternado.length == 0 || /^\s+$/.test(costoInternado) ) {
+                        $("#inputCostoInternado").val(0); 
+                    }
+                    if( precioConsulta == null || precioConsulta.length == 0 || /^\s+$/.test(precioConsulta) ){
+                        precioConsulta = 0;
+                    } 
+                    total = parseFloat(precioConsulta) + parseFloat(costoOperacion) + parseFloat(costoInternado);  
+                    $("#inputTotal").val(total);                
+                }
+
+                function generar_factura(){
+                    if(validar_ingreso()){
+                        var comboPaciente = document.getElementById("inputPaciente");
+                        var selectedPaciente = comboPaciente.options[comboPaciente.selectedIndex].value;
+                        var comboDoctor = document.getElementById("inputMedico");
+                        var selectedDoctor= comboDoctor.options[comboDoctor.selectedIndex].value;
+                        var ruta = "https://proyecto2-2021.herokuapp.com/generar_factura";
+                        const datos = JSON.stringify({
+                            fecha: document.getElementById("inputFecha").value,
+                            paciente: selectedPaciente,
+                            doctor: selectedDoctor,
+                            total: document.getElementById("inputTotal").value,
+                            })
+                        const parametros={
+                            headers:{
+                                'content-type':'application/json; charset=utf-8'
+                            },
+                            body: datos,
+                            method: 'POST',
+                        };
+                        fetch(ruta,parametros)
+                        .then(data=>{ return data.json()})
+                        .then(res=>{console.log(res)
+                            alert(res.mensaje)
+                            location.reload();
+                        })
+                        .then(error=>console.log(error))
+                    }else {
+                        alert('Ingrese todos los Datos')
+                    }
+                }
+
+                function validar_ingreso(){
+                    ingreso_fecha = document.getElementById("inputFecha").value;
+                    if( ingreso_fecha == null || ingreso_fecha.length == 0 || /^\s+$/.test(ingreso_fecha) ) {
+                        return false;
+                    }
+                    ingreso_precio_consulta = document.getElementById("inputPrecioConsulta").value;
+                    if( ingreso_precio_consulta == null || ingreso_precio_consulta.length == 0 || /^\s+$/.test(ingreso_precio_consulta) ) {
+                        return false;
+                    }
+                    return true;
+                }   
+                
+                function getParametro(nombre) {
+                    return (window.location.search.match(new RegExp('[?&]' + nombre + '=([^&]+)')) || [, null])[1];
+                }
+
+                function regresar(){
+                    indice = getParametro('indice');
+                    window.location.href = "enfermera.html?indice="+indice;                            
+                }   
+
+            </script>
+            <div id="layoutAuthentication_footer">
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Arnoldo Luis Antonio González Camey</div>
+                             <div><a> &copy; 2021</a></div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="js/scripts.js"></script>
+    </body>
+</html>

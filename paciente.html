@@ -24,7 +24,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" onclick = "obtener_indice_parametro('indice')">Actualizar datos</a>  
+                            <a class="dropdown-item" onclick = "actualizar_datos()">Actualizar datos</a>  
                             <a class="dropdown-item" href="login.html">Cerrar Sesión</a>                           
                         </div>
                     </li>
@@ -37,8 +37,12 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Opciones</div>
-                            <a class="nav-link" onclick = "ver_estado_cita()">
+                            <a class="nav-link" href = ''>
                                 <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
+                                Solicita una Cita
+                            </a>
+                            <a class="nav-link" onclick = "ver_estado_cita()">
+                                <div class="sb-nav-link-icon"><i class="fas fa-calendar-check"></i></div>
                                 Estado de la Cita
                             </a>
                             <a class="nav-link" onclick = "comprar_medicamento()">
@@ -111,29 +115,21 @@
                         scrollbar: true
                     });
                 </script>
-                <script>
-                    function obtener_indice_parametro(indiceParametro) {
-                        var url = window.location.search.substring(1);
-                        var sURLVariables = url.split('&');
-                        for (var i = 0; i < sURLVariables.length; i++) {
-                            var posicion = sURLVariables[i].split('=');
-                            if (posicion[0] == indiceParametro) {
-                                console.log(posicion[1])
-                                window.location.href = "modificarPerfil.html?status=paciente&indice="+posicion[1];                            
-                                return posicion[1];
-                            }
-                        }
-                        return null;
-                    }
+                <script>                    
                     function ver_estado_cita(){
                         indice = getParametro('indice');
                         window.location.href = "estadoCita.html?indice="+indice;         
                     }
+
                     function comprar_medicamento(){
                         indice = getParametro('indice');
                         window.location.href = "comprarMedicamento.html?indice="+indice;         
                     }
 
+                    function actualizar_datos(){
+                        indice = getParametro('indice');                                
+                        window.location.href = "modificarPerfil.html?status=paciente&indice="+indice;                            
+                    }
 
                     function getParametro(nombre) {
                         return (window.location.search.match(new RegExp('[?&]' + nombre + '=([^&]+)')) || [, null])[1];
@@ -168,7 +164,7 @@
                                 alert('Ingrese todos los Datos')
                             }
                     }
-                function validar_ingreso(){
+                    function validar_ingreso(){
                         ingreso_fecha = document.getElementById("inputFechaCita").value;
                         if( ingreso_fecha == null || ingreso_fecha.length == 0 || /^\s+$/.test(ingreso_fecha) ) {
                             return false;
@@ -182,7 +178,7 @@
                             return false;
                         }
                         return true;
-                }      
+                    }      
   
                 </script>
                 <footer class="py-4 bg-light mt-auto">
