@@ -19,7 +19,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" onclick = "obtener_indice_parametro('indice')">Actualizar datos</a> 
+                            <a class="dropdown-item" onclick = "actualizar_datos()">Actualizar datos</a> 
                             <a class="dropdown-item" href="login.html">Cerrar Sesión</a>                            
                         </div>
                     </li>
@@ -32,13 +32,17 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Opciones</div>
-                            <a class="nav-link">
+                            <a class="nav-link" onclick = 'ir_citas_pendientes()'>
+                                <div class="sb-nav-link-icon"><i class="fas fa-hourglass-half"></i></div>
+                                Citas Pendientes
+                            </a>
+                            <a class="nav-link" href=''>
                                 <div class="sb-nav-link-icon"><i class="fas fa-user-check"></i></div>
                                 Citas Aceptadas
                             </a>
-                            <a class="nav-link">
+                            <a class="nav-link" onclick = 'crear_receta()'>
                                 <div class="sb-nav-link-icon"><i class="fas fa-file-invoice"></i></div>
-                                Generar Factura
+                                Crear Receta
                             </a>
                         </div>
                     </div>
@@ -141,20 +145,21 @@
                             location.reload();
                         })
                         .then(error=>console.log(error))
+                    }                    
+
+                    function crear_receta(){
+                        indice = getParametro('indice');                                
+                        window.location.href = "crearReceta.html?indice="+indice;                            
                     }
-                    
-                    function obtener_indice_parametro(indiceParametro) {
-                        var url = window.location.search.substring(1);
-                        var sURLVariables = url.split('&');
-                        for (var i = 0; i < sURLVariables.length; i++) {
-                            var posicion = sURLVariables[i].split('=');
-                            if (posicion[0] == indiceParametro) {
-                                console.log(posicion[1])
-                                window.location.href = "modificarPerfil.html?status=doctor&indice="+posicion[1];                            
-                                return posicion[1];
-                            }
-                        }
-                        return null;
+
+                    function ir_citas_pendientes(){
+                        indice = getParametro('indice');                                
+                        window.location.href = "doctor.html?indice="+indice;                            
+                    }
+
+                    function actualizar_datos(){
+                        indice = getParametro('indice');                                
+                        window.location.href = "modificarPerfil.html?status=doctor&indice="+indice;                            
                     }
                 </script>
                 <footer class="py-4 bg-light mt-auto">

@@ -17,7 +17,10 @@
     <body class="bg-primary">
         <div id="layoutAuthentication">
             <div id="layoutAuthentication_content">
-                <main>
+                <main> 
+                    <span class="float-right">
+                        </br><a type="button" class="btn btn-danger" onclick = 'regresar()'><i class="far fa-hand-point-left"></i></a>
+                    </span>
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-lg-7">
@@ -162,7 +165,13 @@
                     }else{
                         return true;
                     }
-                }   
+                }
+
+                function regresar(){
+                    indice = getParametro('indice');
+                    status = getParametro('status');
+                    window.location.href = status+".html?indice="+indice;                            
+                }    
             </script>
             <div id="layoutAuthentication_footer">
                 <footer class="py-4 bg-light mt-auto">

@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Generar Factura</title> 
+        <title>Crear Receta</title>     
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
     </head>
@@ -21,12 +21,12 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-6">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">AG Hospital - Generar Factura al Paciente</h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">AG Hospital - Crear Receta al Paciente</h3></div>
                                         <div class="card-body">
                                             <form>
                                                 <div class="form-group">
                                                     <label class="small mb-1" for="inputFechaHoy">Fecha de Hoy</label>
-                                                    <input class="form-control py-4" id="inputFechaHoy" type="text" onclick='fecha_hoy()' placeholder="Seleccione la Fecha de Hoy" readonly/>
+                                                    <input class="form-control py-4" id="inputFechaHoy" type="text" onclick='fecha_hoy()' placeholder="Ingrese la Fecha de Hoy" readonly/>
                                                 </div>
                                                 <div class="form-row">
                                                     <div class="form-group">
@@ -39,36 +39,18 @@
                                                             </form>  
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-6">
-                                                            <label class="small mb-1" for="inputMedico">Médico</label>
-                                                            <form>
-                                                                <select class="btn btn-primary" id="inputMedico" name="inputMedico">
-                                                                    <option ></option>                                            
-                                                                </select>
-                                                            </form>  
-                                                        </div>
-                                                    </div>
                                                 </div>    
                                                 <div class="form-group">
-                                                    <label class="small mb-1" for="inputPrecioConsulta">Precio Consulta ( Q )</label>
-                                                    <input class="form-control py-4" id="inputPrecioConsulta" type="number" placeholder="Ingrese el Precio de la Consulta" />
+                                                    <label class="small mb-1" for="inputPadecimiento">Padecimiento</label>
+                                                    <input class="form-control py-4" id="inputPadecimiento" type="text" placeholder="Ingrese el Padecimiento del Paciente" />
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="small mb-1" for="inputCostoOperacion">Costo Operación ( Q )</label>
-                                                    <input class="form-control py-4" id="inputCostoOperacion" type="number" placeholder="Ingrese el Costo de Operación" />
+                                                    <label class="small mb-1" for="inputDescripcion">Descripción</label>
+                                                    <input class="form-control py-4" id="inputDescripcion" type="text" placeholder="Ingrese la Descripción del Tratamiento" />
                                                 </div>
-                                                <div class="form-group">
-                                                    <label class="small mb-1" for="inputCostoInternado">Costo Internado ( Q )</label>
-                                                    <input class="form-control py-4" id="inputCostoInternado" type="number" placeholder="Ingrese el Costo Intermedio" />
-                                                </div>
-                                                <div class="form-group">
-                                                    <span class="float-right"><label class="small mb-1" for="inputTotal">Total ( Q )</label>
-                                                    <input class="form-control py-4" id="inputTotal" type="number" onclick="total_factura()" placeholder="Click Ver Total" readonly/></span>
-                                                </div></br></br></br>
                                                 <span class="float-right">
                                                     <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0" >
-                                                        <a class="btn btn-primary" onclick="generar_factura()">Generar</a>
+                                                        <a class="btn btn-primary" onclick="crear_receta()">Crear Receta</a>
                                                     </div> 
                                                 </span>                                          
                                             </form>
@@ -79,7 +61,7 @@
                         </div>
                     </div>
                 </main>
-            </div>
+            </div>   
             <script>
 
                 var pacientes = [];
@@ -90,16 +72,7 @@
                 xhrpac.onreadystatechange = (e) => {
                     pacientes = JSON.parse(xhrpac.responseText);
                 }
-
-                var doctores = [];
-                let xhrdoc = new XMLHttpRequest();
-                var rutadoc = "https://proyecto2-2021.herokuapp.com/obtener_doctor";
-                xhrdoc.open('GET', rutadoc);
-                xhrdoc.send()
-                xhrdoc.onreadystatechange = (e) => {
-                    doctores = JSON.parse(xhrdoc.responseText);
-                }
-
+                
                 var citas;
                 let xhr = new XMLHttpRequest();
                 var ruta = "https://proyecto2-2021.herokuapp.com/obtener_cita";
@@ -107,54 +80,29 @@
                 xhr.send()
                 xhr.onreadystatechange = (e) => {
                     citas = JSON.parse(xhr.responseText);
-                    var cuerpoDoc = "";
                     var cuerpoPac = "";
                     for (var i = 0; i < citas.length; i++) {
-                        if(citas[i].estado == 1){
+                        if(citas[i].estado == 2){
                             for(var k = 0; k < pacientes.length; k++){
+                                if(citas[i].indice == k){
                                 cuerpoPac += '<option value="'+k+'">'+pacientes[k].nombre +" "+ pacientes[k].apellido+'</option>';    
-                            }
-                            for(var j = 0; j < doctores.length; j++){
-                                cuerpoDoc += '<option value="'+j+'">'+doctores[j].nombre +" "+ doctores[j].apellido+'</option>';    
-                            }
-                            cuerpoDoc += '</select></form>';
+                            }}
                             cuerpoPac += '</select></form>'
                             }
                         }
                         document.getElementById("inputPaciente").innerHTML = cuerpoPac;
-                        document.getElementById("inputMedico").innerHTML = cuerpoDoc;
                     }
 
-                function total_factura(){
-                    var total = 0;
-                    var precioConsulta = document.getElementById("inputPrecioConsulta").value;
-                    var costoOperacion = document.getElementById("inputCostoOperacion").value;
-                    var costoInternado = document.getElementById("inputCostoInternado").value;
-                    if( costoOperacion == null || costoOperacion.length == 0 || /^\s+$/.test(costoOperacion) ) {
-                        $("#inputCostoOperacion").val(0); 
-                    }
-                    if( costoInternado == null || costoInternado.length == 0 || /^\s+$/.test(costoInternado) ) {
-                        $("#inputCostoInternado").val(0); 
-                    }
-                    if( precioConsulta == null || precioConsulta.length == 0 || /^\s+$/.test(precioConsulta) ){
-                        precioConsulta = 0;
-                    } 
-                    total = parseFloat(precioConsulta) + parseFloat(costoOperacion) + parseFloat(costoInternado);  
-                    $("#inputTotal").val(total);                
-                }
-
-                function generar_factura(){
+                function crear_receta(){
                     if(validar_ingreso()){
                         var comboPaciente = document.getElementById("inputPaciente");
                         var selectedPaciente = comboPaciente.options[comboPaciente.selectedIndex].value;
-                        var comboDoctor = document.getElementById("inputMedico");
-                        var selectedDoctor= comboDoctor.options[comboDoctor.selectedIndex].value;
-                        var ruta = "https://proyecto2-2021.herokuapp.com/generar_factura";
+                        var ruta = "https://proyecto2-2021.herokuapp.com/crear_receta";
                         const datos = JSON.stringify({
-                            fecha: document.getElementById("inputFecha").value,
+                            fecha: document.getElementById("inputFechaHoy").value,
                             paciente: selectedPaciente,
-                            doctor: selectedDoctor,
-                            total: document.getElementById("inputTotal").value,
+                            padecimiento: document.getElementById("inputPadecimiento").value,
+                            descripcion: document.getElementById("inputDescripcion").value,
                             })
                         const parametros={
                             headers:{
@@ -176,12 +124,16 @@
                 }
 
                 function validar_ingreso(){
-                    ingreso_fecha = document.getElementById("inputFecha").value;
+                    ingreso_fecha = document.getElementById("inputFechaHoy").value;
                     if( ingreso_fecha == null || ingreso_fecha.length == 0 || /^\s+$/.test(ingreso_fecha) ) {
                         return false;
                     }
-                    ingreso_precio_consulta = document.getElementById("inputPrecioConsulta").value;
-                    if( ingreso_precio_consulta == null || ingreso_precio_consulta.length == 0 || /^\s+$/.test(ingreso_precio_consulta) ) {
+                    ingreso_padecimiento = document.getElementById("inputPadecimiento").value;
+                    if( ingreso_padecimiento == null || ingreso_padecimiento.length == 0 || /^\s+$/.test(ingreso_padecimiento) ) {
+                        return false;
+                    }
+                    ingreso_descripcion = document.getElementById("inputDescripcion").value;
+                    if( ingreso_descripcion == null || ingreso_descripcion.length == 0 || /^\s+$/.test(ingreso_descripcion) ) {
                         return false;
                     }
                     return true;
@@ -193,7 +145,7 @@
 
                 function regresar(){
                     indice = getParametro('indice');
-                    window.location.href = "enfermera.html?indice="+indice;                            
+                    window.location.href = "doctor.html?indice="+indice;                            
                 }
 
                 function fecha_hoy(){
@@ -206,8 +158,7 @@
                     const fecha_con_formato = hoy+'/'+mesActual+'/'+añoActual;
                     console.log(fecha_con_formato);
                     $("#inputFechaHoy").val(fecha_con_formato); 
-                }   
-
+                }
             </script>
             <div id="layoutAuthentication_footer">
                 <footer class="py-4 bg-light mt-auto">
