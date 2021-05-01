@@ -57,8 +57,15 @@
             </div>          
             <div id="layoutSidenav_content">
                 <main>
-                    <div class="container-fluid">                             
-                        <h1 class="mt-4">AG Hospital </h1> </span> 
+                    <div class="container-fluid">
+                        <div id="header-sin-salto">
+                            <div class="row">
+                                <div class="col"></br>                                
+                                    <span class="float-left"> <h1 class="mt-4">AG Hospital </h1> </span> 
+                                    <span class="float-right"> <a id = "btnCarritoCompras" type="button" class="btn btn-success" onclick='comprar_medicamento()'><i class="fas fa-shopping-cart"></i> Seguir Comprando</a></span> 
+                                </div>
+                            </div>
+                        </div>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Pasión por la curación</li>
                         </ol>
@@ -83,10 +90,7 @@
                 var despues = `</tbody>
                 </table><span class="float-right">
                 <a type="button" class="btn btn-primary" onclick = "crearPDF()">Registrar Pedido</a></td></span> <span class="float-right"> 
-                <p> &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; 
-                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p> </span>
-                <span class="float-right"> <input class="form-control py-2" id="inputTotal" onclick = 'obtener_total()' type="number" readonly/> 
-                </span><span class="float-right"><b>Total &nbsp;&nbsp;</b></span>`
+                </span>`
                 const indicePaciente = getParametro('indice');
                 var total = 0;
                 var subtotal = [];
@@ -120,11 +124,13 @@
                         }
                     }
                     cuerpo += '<td></td><td></td>';
-                    cuerpo += '<td><b>Total</b></td>'
-                    cuerpo += '<td>'+total/2+'</td>';cuerpo += '</tr>';
+                    cuerpo += '<td><b>Total</b></td>';
+                    cuerpo += '<td><input class="form-control py-2" id="inputTotal" value='+ total/2 +' type="number" readonly/></td>';
+                    cuerpo += '</tr>';
                     cuerpo2 += '<td></td><td></td>';
                     cuerpo2 += '<td><b>Total</b></td>'
-                    cuerpo2 += '<td>'+total/2+'</td>';cuerpo += '</tr>';
+                    cuerpo2 += '<td>'+total/2+'</td>';
+                    cuerpo += '</tr>';
                     document.getElementById("tablaMedicamento").innerHTML = antes + cuerpo + despues;
                     document.getElementById("tablaOcultaPDF").innerHTML = antes + cuerpo2 + despuesPdf;
                 }
@@ -135,11 +141,6 @@
                     compras.forEach(function(elemento, indice, array) {
                     console.log("elemento: ",elemento, " indice: ",indice);
                     })
-                }
-
-                function obtener_total(){
-                    var total_input = total/2;
-                    $("#inputTotal").val(total_input); 
                 }
 
                 function getParametro(nombre) {
