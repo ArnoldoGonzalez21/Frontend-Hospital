@@ -33,7 +33,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="btn btn-primary" onclick="recorrer_busqueda()">Login</a>
+                                                <a class="btn btn-primary" onclick="buscar()">Login</a>
                                             </div>                                            
                                         </form>
                                          <div class="card-footer text-center">
@@ -47,54 +47,73 @@
                 </main>
             </div>
             <script>
-                var entre = false;
-                async function busqueda2(extension){
-                    var posicion = -1;
-                    const ruta = "https://proyecto2-2021.herokuapp.com/obtener_"+extension;
-                    await fetch(ruta).then((resp) => resp.json()).then(function(data){
-                        data.forEach(function(elemento, indice, array) {
-                            if(elemento.nombre_usuario ==  document.getElementById('inputNombreUsuario').value){
-                                console.log("elemento: ",elemento.nombre, " indice: ",indice);
-                                posicion = indice;
-                                login(posicion);
+            
+                function posicion_paciente(){
+                    var indice = -1;
+                    let xhr = new XMLHttpRequest();
+                    var ruta = "https://proyecto2-2021.herokuapp.com/obtener_paciente";
+                    xhr.open('GET', ruta);
+                    xhr.send()
+                    xhr.onreadystatechange = (e) => {
+                        var pacientes = JSON.parse(xhr.responseText);
+                        for (var i = 0; i < pacientes.length; i++) {
+                            if(pacientes[i].nombre_usuario == document.getElementById('inputNombreUsuario').value){
+                                indice = i;
+                                console.log('indice'+indice)
                             }
-                        })
-                        if(extension == 'enfermera' && posicion == -1 && !entre){
-                            console.log('entre');
-                            login(posicion);
                         }
-                    }).catch(function(error){
-                        console.log(error); //imprimir error consola
-                    });
+                        login(indice);
+                    }                    
+                }
+                
+                function busqueda(extension){
+                    var indice = -1;
+                    let xhr = new XMLHttpRequest();
+                    var ruta = "https://proyecto2-2021.herokuapp.com/obtener_"+extension;
+                    xhr.open('GET', ruta);
+                    xhr.send()
+                    xhr.onreadystatechange = (e) => {
+                        var personal = JSON.parse(xhr.responseText);
+                        for (var i = 0; i < personal.length; i++) {
+                            if(personal[i].nombre_usuario == document.getElementById('inputNombreUsuario').value){
+                                indice = i;
+                                login(indice);
+                            }                      
+                        }
+                    }                 
+                }
+                function buscar(){
+                    if(document.getElementById('inputNombreUsuario').value == 'admin'){
+                        login(-1);
+                    }else {
+                        busqueda('paciente');
+                        busqueda('enfermera');
+                        busqueda('doctor');
+                    }
                 }
 
-                function recorrer_busqueda(){
-                    busqueda2('paciente');
-                    busqueda2('doctor');
-                    busqueda2('enfermera');
-                    
-                }
-
-                async function login(posicionArreglo){
-                    console.log('entre2');
-                    entre = true;
+                function login(posicionArreglo){
                     const user = document.getElementById('inputNombreUsuario').value; 
                     const contrasena = document.getElementById('inputPassword').value;
                     const url = 'https://proyecto2-2021.herokuapp.com/'
                     const ruta = url + 'login?nombre_usuario=' + user + '&contrasena=' + contrasena;
-                    await fetch(ruta).then((resp) => resp.json()).then(function(data){
+                    fetch(ruta).then((resp) => resp.json()).then(function(data){
                         // en data esta lo que llega
-                        alert(data.mensaje);
                         if(data.estado == 0){
+                            alert(data.mensaje);
                             location.reload();
                         }
                         else if(data.estado == 1){
+                            alert(data.mensaje);
                             window.location.href = "paciente.html?indice="+posicionArreglo;
                         }else if(data.estado == 2){
+                            alert(data.mensaje);
                             window.location.href = "enfermera.html?indice="+posicionArreglo;
                         }else if(data.estado == 3){
+                            alert(data.mensaje);
                             window.location.href = "doctor.html?indice="+posicionArreglo;
                         }else if(data.estado == 4){
+                            alert(data.mensaje);
                             window.location.href = "index.html"
                         }
                     }).catch(function(error){
