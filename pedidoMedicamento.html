@@ -22,8 +22,8 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="login.html">Cerrar Sesión</a>
-                            <a class="dropdown-item" onclick = 'regresar()'>Regresar</a>                            
+                            <a class="dropdown-item" onclick = 'actualizar_datos()'>Actualizar Datos</a> 
+                            <a class="dropdown-item" href="login.html">Cerrar Sesión</a>                           
                         </div>
                     </li>
                 </ul>
@@ -35,11 +35,15 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Opciones</div>
-                            <a class="nav-link">
+                            <a class="nav-link" onclick = 'ir_solicitar_cita()'>
                                 <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
+                                Solicita una Cita
+                            </a>
+                            <a class="nav-link" onclick = 'ver_estado_cita()'>
+                                <div class="sb-nav-link-icon"><i class="fas fa-calendar-check"></i></div>
                                 Estado de la Cita
                             </a>
-                            <a class="nav-link" href="tables.html">
+                            <a class="nav-link" onclick = 'comprar_medicamento()'>
                                 <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
                                 Comprar Medicamento
                             </a>
@@ -53,20 +57,14 @@
             </div>          
             <div id="layoutSidenav_content">
                 <main>
-                    <div class="container-fluid">
-                        <div id="header-sin-salto">
-                            <div class="row">
-                                <div class="col"></br>                                
-                                    <span class="float-left"> <h1 class="mt-4">AG Hospital </h1> </span> 
-                                    <span class="float-right"> <a type="button" class="btn btn-success"><i class="fas fa-shopping-cart"></i> Carrito</a></span> 
-                                </div>
-                            </div>
-                        </div>
+                    <div class="container-fluid">                             
+                        <h1 class="mt-4">AG Hospital </h1> </span> 
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Pasión por la curación</li>
                         </ol>
                         <h4 class="mt-4">Medicamentos</h4>
                         <div class="table-responsive" id="tablaMedicamento"></div>
+                        <div class="table-responsive" id="tablaOcultaPDF" style="visibility: hidden;"></div>
                     </div>
                 </main>
                 <script>
@@ -75,20 +73,23 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Precio ( Q )</th>
-                            <th>Descripción</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal ( Q )</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Precio ( Q )</th>
-                            <th>Descripción</th>
-                        </tr>
-                    </tfoot>
                     <tbody>`
-                var despues = `</tbody>
+                var despuesPdf =  `</tbody>
                 </table>`
-                
+                var despues = `</tbody>
+                </table><span class="float-right">
+                <a type="button" class="btn btn-primary" onclick = "crearPDF()">Registrar Pedido</a></td></span> <span class="float-right"> 
+                <p> &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; 
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p> </span>
+                <span class="float-right"> <input class="form-control py-2" id="inputTotal" onclick = 'obtener_total()' type="number" readonly/> 
+                </span><span class="float-right"><b>Total &nbsp;&nbsp;</b></span>`
+                const indicePaciente = getParametro('indice');
+                var total = 0;
+                var subtotal = [];
                 let xhr = new XMLHttpRequest();
                 var ruta = "https://proyecto2-2021.herokuapp.com/obtener_medicamento";
                 xhr.open('GET', ruta);
@@ -96,16 +97,38 @@
                 xhr.onreadystatechange = (e) => {
                     var medicamentos = JSON.parse(xhr.responseText);
                     var cuerpo = "";
+                    var cuerpo2 = "";
                     for (var i = 0; i < medicamentos.length; i++) {
-                        cuerpo += '<tr>';
-                        cuerpo += '<td>' + medicamentos[i].nombre + '</td>';
-                        cuerpo += '<td>' + medicamentos[i].precio + '</td>';
-                        cuerpo += '<td>' + medicamentos[i].descripcion + '</td>';
-                        cuerpo += '<td><a type="button" class="btn btn-danger" onclick = "agregar_carrito('+i+')">Añadir al Carrito  <i class="fas fa-shopping-basket"></i></a></td>';
-                        cuerpo += '</tr>';
+                        if(parseInt(medicamentos[i].venta) > 0){                            
+                            if(medicamentos[i].venta > 0 && medicamentos[i].paciente == indicePaciente){
+                                subtotal[i] = parseInt(medicamentos[i].venta) * parseFloat(medicamentos[i].precio);
+                                cuerpo += '<tr>';
+                                cuerpo2 += '<tr>';
+                                cuerpo += '<td>' + medicamentos[i].nombre + '</td>';
+                                cuerpo2 += '<td>' + medicamentos[i].nombre + '</td>';
+                                cuerpo += '<td>' + medicamentos[i].precio + '</td>';
+                                cuerpo2 += '<td>' + medicamentos[i].precio + '</td>';
+                                cuerpo += '<td>' + medicamentos[i].venta + '</td>';
+                                cuerpo2 += '<td>' + medicamentos[i].venta + '</td>';
+                                cuerpo += '<td>' + subtotal[i] + '</td>';
+                                cuerpo2 += '<td>' + subtotal[i] + '</td>';
+                                total += subtotal[i];
+                                cuerpo += '<td><a type="button" class="btn btn-danger" href="eliminarMedicamentoPedido.html?indice=' + i + '&venta=' + medicamentos[i].venta + '">Eliminar</a></td>';
+                                cuerpo += '</tr>';
+                                cuerpo2 += '</tr>';
+                            }
+                        }
                     }
+                    cuerpo += '<td></td><td></td>';
+                    cuerpo += '<td><b>Total</b></td>'
+                    cuerpo += '<td>'+total/2+'</td>';cuerpo += '</tr>';
+                    cuerpo2 += '<td></td><td></td>';
+                    cuerpo2 += '<td><b>Total</b></td>'
+                    cuerpo2 += '<td>'+total/2+'</td>';cuerpo += '</tr>';
                     document.getElementById("tablaMedicamento").innerHTML = antes + cuerpo + despues;
+                    document.getElementById("tablaOcultaPDF").innerHTML = antes + cuerpo2 + despuesPdf;
                 }
+
                 let compras = [];
                 function agregar_carrito(indice_compra){
                     compras[compras.length] = indice_compra;
@@ -113,9 +136,41 @@
                     console.log("elemento: ",elemento, " indice: ",indice);
                     })
                 }
-                function regresar(){
-                    var posicion = getParametro("indice");
-                    window.location.href = "paciente.html?indice="+posicion;
+
+                function obtener_total(){
+                    var total_input = total/2;
+                    $("#inputTotal").val(total_input); 
+                }
+
+                function getParametro(nombre) {
+                    return (window.location.search.match(new RegExp('[?&]' + nombre + '=([^&]+)')) || [, null])[1];
+                }
+
+                function actualizar_datos(){
+                    indice = getParametro('indice');                                
+                    window.location.href = "modificarPerfil.html?status=paciente&indice="+indice;                            
+                }
+
+                function ver_estado_cita(){
+                    indice = getParametro('indice');
+                    window.location.href = "estadoCita.html?indice="+indice;         
+                }
+
+                function ir_solicitar_cita(){
+                    indice = getParametro('indice');
+                    window.location.href = "paciente.html?indice="+indice;         
+                }
+
+                function comprar_medicamento(){
+                    indice = getParametro('indice');
+                    window.location.href = "comprarMedicamento.html?indice="+indice;         
+                }
+
+                function crearPDF(){
+                    var pdf = new jsPDF();
+                    pdf.fromHTML($('#tablaOcultaPDF').get(0),10,10,{'width':180});
+                    pdf.autoPrint();
+                    pdf.output("dataurlnewwindow")
                 }
                 </script>
                 <footer class="py-4 bg-light mt-auto">

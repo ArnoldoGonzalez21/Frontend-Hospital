@@ -62,7 +62,10 @@
                                             </div>                                           
                                             <div class="form-group">
                                                 <label class="small mb-1" for="inputPassword">Contraseña</label>
-                                                <input class="form-control py-4" id="inputPassword" type="password" onClick="validar_tamano_contrasena()" placeholder="Ingrese su Contraseña" />
+                                                <div class="input-group-append">
+                                                    <input class="form-control py-4" id="inputPassword" type="password" onClick="validar_tamano_contrasena()" placeholder="Ingrese su Contraseña" />
+                                                    <button id="show_password" class="btn" type="button" onclick="mostrarPassword()"> <span class="fa fa-eye-slash icon"></span> </button>
+                                                </div>
                                             </div> 
                                             <div class="form-group">
                                                 <label class="small mb-1" for="inputTelefono">Teléfono</label>
@@ -191,7 +194,18 @@
                     }else{
                         return true;
                     }
-                }   
+                }
+
+                function mostrarPassword(){
+                    var cambio = document.getElementById("inputPassword");
+                    if(cambio.type == "password"){
+                        cambio.type = "text";
+                        $('.icon').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+                    }else{
+                        cambio.type = "password";
+                        $('.icon').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+                    }
+                }      
             </script>
             
             <!--https://adminlte.io/themes/AdminLTE/pages/forms/general.html-->

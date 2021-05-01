@@ -65,7 +65,10 @@
                                             </div>                                           
                                             <div class="form-group">
                                                 <label class="small mb-1" for="inputPassword">Contraseña</label>
-                                                <input class="form-control py-4" id="inputPassword" type="password" onClick="validar_tamano_contrasena()" placeholder="Ingrese su Contraseña" />
+                                                <div class="input-group-append">
+                                                    <input class="form-control py-4" id="inputPassword" type="password" onClick="validar_tamano_contrasena()" placeholder="Ingrese su Contraseña" />                                                
+                                                    <button id="show_password" class="btn" type="button" onclick="mostrarPassword()"> <span class="fa fa-eye-slash icon"></span> </button>
+                                                </div>
                                             </div> 
                                             <div class="form-group">
                                                 <label class="small mb-1" for="inputTelefono">Teléfono</label>
@@ -90,6 +93,30 @@
                 function getParametro(nombreParametro) {
                     return (window.location.search.match(new RegExp('[?&]' + nombreParametro + '=([^&]+)')) || [, null])[1];
                 }
+
+                let contrasena_personal;
+                var status = getParametro('status'); // paciente doctor enfermera
+                var indiceURl = getParametro("indice");
+                let xhr = new XMLHttpRequest();
+                var ruta = "https://proyecto2-2021.herokuapp.com/obtener_"+status;
+                xhr.open('GET', ruta);
+                xhr.send()
+                xhr.onreadystatechange = (e) => {
+                    var personal = JSON.parse(xhr.responseText);
+                    nombre_personal = personal[indiceURl].nombre;                                                    
+                    $("#inputNombre").val(nombre_personal);
+                    apellido_personal =  personal[indiceURl].apellido;
+                    $("#inputApellido").val(apellido_personal);
+                    fecha_nacimiento_personal = personal[indiceURl].fecha_nacimiento;
+                    $("#inputFechaNacimiento").val(fecha_nacimiento_personal);
+                    contrasena_personal = personal[indiceURl].contrasena;
+                    $("#inputPassword").val(contrasena_personal);
+                    nombre_usuario_personal = personal[indiceURl].nombre_usuario; 
+                    $("#inputNombreUsuario").val(nombre_usuario_personal);                                                             
+                    telefono_personal = personal[indiceURl].telefono;
+                    $("#inputTelefono").val(telefono_personal);
+                }
+
                 async function editar_perfil() {
                     if(validar_ingreso()){
                         var status = getParametro('status'); // paciente doctor enfermera
@@ -171,6 +198,17 @@
                     indice = getParametro('indice');
                     status = getParametro('status');
                     window.location.href = status+".html?indice="+indice;                            
+                }
+                
+                function mostrarPassword(){
+                    var cambio = document.getElementById("inputPassword");
+                    if(cambio.type == "password"){
+                        cambio.type = "text";
+                        $('.icon').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+                    }else{
+                        cambio.type = "password";
+                        $('.icon').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+                    }
                 }    
             </script>
             <div id="layoutAuthentication_footer">
