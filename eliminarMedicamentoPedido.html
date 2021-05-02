@@ -6,9 +6,10 @@
             }
             eliminar();
             async function eliminar(){
-                indiceMedicamento = getParametro("indice");
+                indice = getParametro('indice');
+                posicionMedicamento = getParametro("posicion");
                 let json = JSON.stringify({
-                    indice: indiceMedicamento,
+                    indice: posicionMedicamento,
                     venta: getParametro("venta"),
                     paciente: -1,
                 })
@@ -19,7 +20,7 @@
                 }).catch(function(error){
                     console.log(error)
                 });
-                window.location.href = "pedidoMedicamento.html?indice="+indiceMedicamento;
+                window.location.href = "pedidoMedicamento.html?indice="+indice;
             }
         </script>
     </head>
