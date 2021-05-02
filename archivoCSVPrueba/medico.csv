@@ -1,5 +1,5 @@
-nombre,apellido,fecha,sexo,nombre_usuario,contrasena,telefono
-Polo,Ortiz,06/05/1996,f,polo,9021,87288901
-Joaquin,Castallo,28/02/1990,M,joaqui,2891ds,89219032
-Ximena,Castallo,28/02/1990,M,xime,2891ds,89219032
-Karol,Menez,28/02/1990,M,kari,2891ds,89219032
+nombre,apellido,fecha,sexo,nombre_usuario,contrasena,especialidad,telefono
+Polo,Ortiz,06/05/1996,f,polo,9021,cirujano,87288901
+Joaquin,Castallo,28/02/1990,M,joaqui,2891ds,pediatra,89219032
+Ximena,Castallo,28/02/1990,M,xime,2891ds,odontologo,89219032
+Karol,Menez,28/02/1990,M,kari,2891ds,general,89219032
