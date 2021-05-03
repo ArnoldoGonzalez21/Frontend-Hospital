@@ -6,25 +6,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Página Administrator</title>
+        <title>Página Principal</title>
         <link href="css/styles.css" rel="stylesheet" />
-        <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
     </head>
-    <body class="sb-nav-fixed">
+    <body>
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <a class="navbar-brand" href="index.html">Proyecto 2 - IPC 1</a>
-            <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
-            <!-- Navbar-->
+            <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
-                <ul class="navbar-nav ml-auto ml-md-0">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="login.html">Cerrar Sesión</a>                            
-                        </div>
-                    </li>
-                </ul>
+                <div class="input-group">
+                    <div class="input-group-append">
+                        <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+                    </div>
+                </div>
             </form>
         </nav>
         <div id="layoutSidenav">
@@ -33,22 +28,17 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Opciones</div>
-                            <a class="nav-link" href='listado_paciente.html'>
-                                <div class="sb-nav-link-icon"><i href='listado_paciente.html' class="fas fa-user-injured"></i></div>
-                                Pacientes
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-file-signature"></i></div>
+                                Autenticación
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
-                            <a class="nav-link collapsed" href='listado_doctor.html'>
-                                <div class="sb-nav-link-icon"><i href='listado_doctor.html' class="fas fa-user-md"></i></div>
-                                Médicos
-                            </a>
-                            <a class="nav-link collapsed" href='listado_enfermera.html'>
-                                <div class="sb-nav-link-icon"><i href='listado_enfermera.html' class="fas fa-user-nurse"></i></div>
-                                Enfermeras
-                            </a>
-                            <a class="nav-link collapsed" href="medicamento.html">
-                                <div class="sb-nav-link-icon"><i href='medicamento.html' class="fas fa-pills"></i></div>
-                                Medicamentos
-                            </a>
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link" href="login.html">Iniciar Sesión</a>
+                                    <a class="nav-link" href="register.html">Registro Paciente</a>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -56,254 +46,69 @@
                         Sección B
                     </div>
                 </nav>
-            </div>          
+            </div>
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid">
-                        <h1 class="mt-4">AG Hospital</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Pasión por la curación</li>
-                        </ol>
-                        <div class="row">
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-success text-white mb-4">
-                                    <div class="card-body">Pacientes</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <label for="fileCSVPaciente">Seleccionar Archivo:</label>
-                                        <input type="file" id="fileCSVPaciente" onclick = 'carga_masiva_paciente()'/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">Médicos</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <label for="fileCSVMedico">Seleccionar Archivo:</label>
-                                        <input type="file" id="fileCSVMedico" onclick = 'carga_masiva_doctor()'/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-warning text-white mb-4">
-                                    <div class="card-body">Enfermeras</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <label for="fileCSVEnfermera">Seleccionar Archivo:</label>
-                                        <input type="file" id="fileCSVEnfermera" onclick = 'carga_masiva_enfermera()'/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">Medicamentos</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <label for="fileCSVMedicamento">Seleccionar Archivo:</label>
-                                        <input type="file" id="fileCSVMedicamento" onclick = 'carga_masiva_medicamento()'/>
-                                    </div>
+                        <div id="header-sin-salto">
+                            <div class="row">
+                                <div class="col"></br>                                
+                                    <span class="float-left"> <h1 class="mt-4">AG Hospital </h1> </span> 
+                                    <img src="imagenes/logo.png"  class="rounded float-right" width = '4%' class="img-fluid" alt="Responsive image">
                                 </div>
                             </div>
                         </div>
-                    </div>   
+                        <!-- <i class="fas fa-ambulance"></i> Emergencias 2334-5955 -->
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Pasión por la Curación</li>
+                        </ol>
+                        <div class="text-center">
+                            <img src="imagenes/logo.png" width = '30%' class="img-fluid" alt="Responsive image">
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <p class="mb-0">
+                                    <h4 class="mt-4"> Nuestra Visión</h4>
+                                    Somos una Institución de salud que provee servicios de gran excelencia e
+                                    innovadores, con énfasis en la seguridad y bienestar de los 
+                                    pacientes y contribuyendo al desarrollo de la ciencia médica en Guatemala.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <p class="mb-0">
+                                    <h4 class="mt-4"> Nuestra Misión</h4>
+                                    Ser la mejor institución de salud en Guatemala, que proporciona 
+                                    servicios médico-hospitalarios de excelencia, con los más altos estándares
+                                    de calidad, con una pasión y ética profesional.
+                                </p>
+                            </div>
+                        </div> 
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <p class="mb-0">
+                                    <h4 class="mt-4"> Medidas de Prevención del COVID-19</h4>
+                                    Para evitar la propagación de la COVID-19:
+                                    <ul>
+                                        <li>Lávate las manos con frecuencia. Usa agua y jabón o un desinfectante de manos a base de alcohol.</li>
+                                        <li>Mantén una distancia de seguridad con personas que tosan o estornuden.</li>
+                                        <li>Utiliza mascarilla cuando no sea posible mantener el distanciamiento físico.</li>
+                                        <li>No te toques los ojos, la nariz ni la boca.</li>
+                                        <li>Cuando tosas o estornudes, cúbrete la nariz y la boca con el codo flexionado o con un pañuelo.</li>
+                                        <li>Si no te encuentras bien, quédate en casa.</li>
+                                        <li>En caso de que tengas fiebre, tos o dificultad para respirar, busca atención médica.</li>
+                                    </ul>    
+                                    Llama por teléfono antes de acudir a cualquier proveedor de servicios sanitarios para que te dirijan al centro médico adecuado. 
+                                    De esta forma, te protegerás a ti y evitarás la propagación de virus y otras infecciones.
+                                </p>
+                            </div>
+                        </div>
+                        <div style="height: 40vh"></div>
+                        <div class="card mb-4"><div class="card-body">
+                        Contáctenos: <i class="fas fa-home"></i> 7a. Avenida 9-30, Zona 1 Guatemala. <i class="fas fa-phone-alt"></i>  P.B.X. +502 2384-3221  <i class="fas fa-phone-alt"></i>   Laboratorio:  +502 2384-2025, <i class="fas fa-phone-alt"></i>  +502 2322-9024 </div></div>
+                    </div>
                 </main>
-                <script>
-                    extension = '';
-                    /*------------------------Registro Pacientes, Enfermeras-------------------------*/
-                    function register_personal(en_nombre, en_apell, en_fecha,en_sexo, en_user, en_contra, en_tel){
-                        var url = "https://proyecto2-2021.herokuapp.com";
-                        var ruta = url + extension;
-                        const datos = JSON.stringify({
-                            nombre: en_nombre,
-                            apellido: en_apell,
-                            fecha_nacimiento: en_fecha,
-                            sexo: en_sexo,
-                            nombre_usuario: en_user,
-                            contrasena: en_contra,
-                            telefono: en_tel,
-                        })
-                        const parametros={
-                            headers:{
-                                'content-type':'application/json; charset=utf-8'
-                            },
-                            body: datos,
-                            method: 'POST',
-                        };
-                        fetch(ruta,parametros)
-                        .then(data=>{ return data.json()})
-                        .then(res=>{console.log(res)
-                            console.log(res.mensaje)
-                        })
-                        .then(error=>console.log(error))
-                    }
-
-                    function leer_Archivo(evt) {
-                        let file = evt.target.files[0];
-                        let reader = new FileReader();
-                        reader.onload = (e) => {
-                            // Cuando el archivo se terminó de cargar
-                            let lines = manipular_csv(e.target.result);
-                            let salida = convertir_matriz(lines);
-                            for (var i = 1; i < salida[0].length; i++) {
-                                nombre_salida = salida[0][i];
-                                apellido_salida = salida[1][i];
-                                fecha_nacimiento_salida = salida[2][i];
-                                sexo_salida = salida[3][i];
-                                nombre_usuario_salida = salida[4][i];
-                                contrasena_salida = salida[5][i];
-                                telefono_salida = salida[6][i];
-                                let reg = register_personal(nombre_salida, apellido_salida,
-                                fecha_nacimiento_salida, sexo_salida, nombre_usuario_salida, 
-                                contrasena_salida, telefono_salida);
-                            }
-                            console.log(salida);
-                            alert('Archivo agregado con exito')
-                        };
-                        // Leemos el contenido del archivo seleccionado
-                        reader.readAsBinaryString(file);
-                    }
-
-                    /*------------------------Métodos CSV-------------------------*/
-                    function manipular_csv(text) {
-                        // Obtenemos las lineas del texto
-                        let lines = text.replace(/\r/g, '').split('\n');
-                        return lines.map(line => {
-                            // Por cada linea obtenemos los valores
-                            let values = line.split(',');
-                            return values;
-                        });
-                    }
-
-                    function convertir_matriz(matrix){
-                        let salida = [];
-                        // Por cada fila
-                        matrix.forEach((values, row) => {
-                            // Vemos los valores y su posicion
-                            values.forEach((value, col) => {
-                            // Si la posición aún no fue creada
-                            if (salida[col] === undefined) salida[col] = [];
-                            salida[col][row] = value;
-                            });
-                        });
-                        return salida;
-                    }
-
-                    /*------------------------Métodos Listener-------------------------*/
-                    function carga_masiva_paciente(){
-                        document.getElementById('fileCSVPaciente').addEventListener('change', leer_Archivo, false); 
-                        extension = '/registro_paciente';
-                    }
-                    function carga_masiva_enfermera(){ 
-                        document.getElementById('fileCSVEnfermera').addEventListener('change', leer_Archivo, false); 
-                        extension = '/registro_enfermera';
-                    }
-                     function carga_masiva_doctor(){ 
-                        document.getElementById('fileCSVMedico').addEventListener('change', leer_Archivo_doctor, false); 
-                    }
-                    function carga_masiva_medicamento(){
-                        document.getElementById('fileCSVMedicamento').addEventListener('change', leer_Archivo_Medicamento, false); 
-                    }
-
-                    /*------------------------Registro Medicamentos-------------------------*/
-                    function register_medicamento(en_nombre, en_precio, en_descrip, en_cant){
-                        var ruta = "https://proyecto2-2021.herokuapp.com/registro_medicamento";
-                        const datos = JSON.stringify({
-                            nombre: en_nombre,
-                            precio: en_precio,
-                            descripcion: en_descrip,
-                            cantidad: en_cant,
-                        })
-                        const parametros={
-                            headers:{
-                                'content-type':'application/json; charset=utf-8'
-                            },
-                            body: datos,
-                            method: 'POST',
-                        };
-                        fetch(ruta,parametros)
-                        .then(data=>{ return data.json()})
-                        .then(res=>{console.log(res)
-                            console.log(res.mensaje)
-                        })
-                        .then(error=>console.log(error))
-                    }
-
-                    function leer_Archivo_Medicamento(evt) {
-                        let fileMed = evt.target.files[0];
-                        let readerMed = new FileReader();
-                        readerMed.onload = (e) => {
-                            // Cuando el archivo se terminó de cargar
-                            let lines = manipular_csv(e.target.result);
-                            let salida = convertir_matriz(lines);
-                            for (var i = 1; i < salida[0].length; i++) {
-                                nombre_salida = salida[0][i];
-                                precio_salida = salida[1][i];
-                                descripcion_salida = salida[2][i];
-                                cantidad_salida = salida[3][i];
-                                let reg = register_medicamento(nombre_salida,precio_salida,
-                                descripcion_salida,cantidad_salida);
-                            }
-                            console.log(salida);
-                            alert('Archivo agregado con exito')
-                        };
-                        // Leemos el contenido del archivo seleccionado
-                        readerMed.readAsBinaryString(fileMed);
-                    }
-
-                    /*------------------------Registro Doctor-------------------------*/
-                    function register_doctor(en_nombre, en_apell, en_fecha,en_sexo, en_user, en_contra, en_espec, en_tel){
-                        var ruta = "https://proyecto2-2021.herokuapp.com/registro_doctor";
-                        const datos = JSON.stringify({
-                            nombre: en_nombre,
-                            apellido: en_apell,
-                            fecha_nacimiento: en_fecha,
-                            sexo: en_sexo,
-                            nombre_usuario: en_user,
-                            contrasena: en_contra,
-                            especialidad: en_espec,
-                            telefono: en_tel,
-                        })
-                        const parametros={
-                            headers:{
-                                'content-type':'application/json; charset=utf-8'
-                            },
-                            body: datos,
-                            method: 'POST',
-                        };
-                        fetch(ruta,parametros)
-                        .then(data=>{ return data.json()})
-                        .then(res=>{console.log(res)
-                            console.log(res.mensaje)
-                        })
-                        .then(error=>console.log(error))
-                    }
-
-                    function leer_Archivo_doctor(evt) {
-                        let file = evt.target.files[0];
-                        let reader = new FileReader();
-                        reader.onload = (e) => {
-                            // Cuando el archivo se terminó de cargar
-                            let lines = manipular_csv(e.target.result);
-                            let salida = convertir_matriz(lines);
-                            for (var i = 1; i < salida[0].length; i++) {
-                                nombre_salida = salida[0][i];
-                                apellido_salida = salida[1][i];
-                                fecha_nacimiento_salida = salida[2][i];
-                                sexo_salida = salida[3][i];
-                                nombre_usuario_salida = salida[4][i];
-                                contrasena_salida = salida[5][i];
-                                especialidad_salida = salida[6][i];
-                                telefono_salida = salida[7][i];
-                                let reg = register_doctor(nombre_salida, apellido_salida,
-                                fecha_nacimiento_salida, sexo_salida, nombre_usuario_salida, 
-                                contrasena_salida, especialidad_salida, telefono_salida);
-                            }
-                            console.log(salida);
-                            alert('Archivo agregado con exito')
-                        };
-                        // Leemos el contenido del archivo seleccionado
-                        reader.readAsBinaryString(file);
-                    }
-
-                </script>
-                
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid">
                         <div class="d-flex align-items-center justify-content-between small">
@@ -317,8 +122,5 @@
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
-        <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
-        <script src="assets/demo/datatables-demo.js"></script>
     </body>
 </html>
