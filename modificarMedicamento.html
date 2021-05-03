@@ -59,6 +59,23 @@
             function getParametro(nombre) {
                 return (window.location.search.match(new RegExp('[?&]' + nombre + '=([^&]+)')) || [, null])[1];
             }
+            var indiceURl = getParametro("indice");
+            let xhr = new XMLHttpRequest();
+            var ruta = "https://proyecto2-2021.herokuapp.com/obtener_medicamento";
+            xhr.open('GET', ruta);
+            xhr.send()
+            xhr.onreadystatechange = (e) => {
+            var medicamentos = JSON.parse(xhr.responseText);
+            nombre_med = medicamentos[indiceURl].nombre;                                                    
+            $("#inputNombre").val(nombre_med);
+            descripcion_med =  medicamentos[indiceURl].descripcion;
+            $("#inputDescripcion").val(descripcion_med);
+            precio_med = medicamentos[indiceURl].precio;
+            $("#inputPrecio").val(precio_med);
+            cantidad_med = medicamentos[indiceURl].cantidad; 
+            $("#inputCantidad").val(cantidad_med); 
+            }
+
             async function editar_medicamento() {
                 let json = JSON.stringify({
                     indice: getParametro("indice"),
