@@ -151,7 +151,7 @@
                         var selectedDoctor= comboDoctor.options[comboDoctor.selectedIndex].value;
                         var ruta = "https://proyecto2-2021.herokuapp.com/generar_factura";
                         const datos = JSON.stringify({
-                            fecha: document.getElementById("inputFecha").value,
+                            fecha: document.getElementById("inputFechaHoy").value,
                             paciente: selectedPaciente,
                             doctor: selectedDoctor,
                             total: document.getElementById("inputTotal").value,
@@ -176,7 +176,7 @@
                 }
 
                 function validar_ingreso(){
-                    ingreso_fecha = document.getElementById("inputFecha").value;
+                    ingreso_fecha = document.getElementById("inputFechaHoy").value;
                     if( ingreso_fecha == null || ingreso_fecha.length == 0 || /^\s+$/.test(ingreso_fecha) ) {
                         return false;
                     }
