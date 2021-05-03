@@ -71,8 +71,8 @@
                 xhrpac.send()
                 xhrpac.onreadystatechange = (e) => {
                     pacientes = JSON.parse(xhrpac.responseText);
-                }
-                
+                } 
+
                 var citas;
                 let xhr = new XMLHttpRequest();
                 var ruta = "https://proyecto2-2021.herokuapp.com/obtener_cita";

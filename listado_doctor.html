@@ -69,7 +69,9 @@
                         <h4 class="mt-4">Médicos</h4>
                         <div class="table-responsive" id="tablaMedicamento"></div>
                         <a class="btn btn-primary" onclick="crearPDF()">Generar PDF</a>
+                        <span class="float-right"><a class="btn btn-success" onclick="crear_PDF_citas()">Doctores con más Citas</a></span>
                         <div class="table-responsive" id="tablaOcultaPDF" style="visibility: hidden;"></div>
+                        <div class="table-responsive" id="tablaOcultaMasCitas" style="visibility: hidden;"></div>
                     </div>
                 </main>
                 <script>
@@ -142,6 +144,49 @@
                 function crearPDF(){
                     var pdf = new jsPDF();
                     pdf.fromHTML($('#tablaOcultaPDF').get(0),10,10,{'width':180});
+                    pdf.autoPrint();
+                    pdf.output("dataurlnewwindow")
+                }
+
+                var antes_PDF_doc = `<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Especialidad</th>
+                            <th>Número de Citas</th>
+                        </tr>
+                    </thead>
+                    <tbody>`
+
+                const rutaPDF = "https://proyecto2-2021.herokuapp.com/obtener_doctor";
+                fetch(rutaPDF).then((resp) => resp.json()).then(function(data){
+                    var contenido = ""; 
+                    data.sort(function (a, b) {
+                        if (a.citas < b.citas) {
+                            return 1;
+                        }
+                        if (a.citas > b.citas) {
+                            return -1;
+                        }
+                        return 0;
+                    });  
+                    for(var i = 0; i < 3; i++){
+                        contenido += '<tr>';
+                        contenido += '<td>' + data[i].nombre + '</td>';
+                        contenido += '<td>' + data[i].apellido + '</td>';
+                        contenido += '<td>' + data[i].especialidad + '</td>';
+                        contenido += '<td>' + data[i].citas + '</td>';
+                        contenido += '</tr>';
+                    }
+                    document.getElementById("tablaOcultaMasCitas").innerHTML = antes_PDF_doc + contenido + despues;
+                }).catch(function(error){
+                    console.log(error); 
+                });
+
+                function crear_PDF_citas(){
+                    var pdf = new jsPDF();
+                    pdf.fromHTML($('#tablaOcultaMasCitas').get(0),10,10,{'width':180});
                     pdf.autoPrint();
                     pdf.output("dataurlnewwindow")
                 }

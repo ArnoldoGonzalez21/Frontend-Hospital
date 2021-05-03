@@ -104,7 +104,7 @@
                         citas = JSON.parse(xhr.responseText);
                         var cuerpo = "";
                         for (var i = 0; i < citas.length; i++) {
-                            if(citas[i].estado == 1){
+                            if(citas[i].estado == 1 && citas[i].doctor == -1){
                                 cuerpo += '<tr>';
                                 cuerpo += '<td>' + citas[i].fecha + '</td>';
                                 cuerpo += '<td>' + citas[i].hora + '</td>';

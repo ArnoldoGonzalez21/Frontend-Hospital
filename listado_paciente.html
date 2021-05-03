@@ -69,6 +69,7 @@
                         <h4 class="mt-4">Pacientes</h4>
                         <div class="table-responsive" id="tablaMedicamento"></div>
                         <a class="btn btn-primary" onclick="crearPDF()">Generar PDF</a>
+                        <a class="btn btn-primary" onclick="crearPDF()">Enfermedades más Comunes</a>
                         <div class="table-responsive" id="tablaOcultaPDF" style="visibility: hidden;"></div>
                     </div>
                 </main>
@@ -141,6 +142,39 @@
                     pdf.autoPrint();
                     pdf.output("dataurlnewwindow")
                 }
+
+                const rutaPDF = "https://proyecto2-2021.herokuapp.com/obtener_receta";
+                fetch(rutaPDF).then((resp) => resp.json()).then(function(data){
+                    var contenido = ""; 
+                    data.sort(function (a, b) {
+                        if (a.citas < b.citas) {
+                            return 1;
+                        }
+                        if (a.citas > b.citas) {
+                            return -1;
+                        }
+                        return 0;
+                    });  
+                    for(var i = 0; i < 3; i++){
+                        contenido += '<tr>';
+                        contenido += '<td>' + data[i].nombre + '</td>';
+                        contenido += '<td>' + data[i].apellido + '</td>';
+                        contenido += '<td>' + data[i].especialidad + '</td>';
+                        contenido += '<td>' + data[i].citas + '</td>';
+                        contenido += '</tr>';
+                    }
+                    document.getElementById("tablaOcultaMasCitas").innerHTML = antes_PDF_doc + contenido + despues;
+                }).catch(function(error){
+                    console.log(error); 
+                });
+
+                function crear_PDF_padecimientos(){
+                    var pdf = new jsPDF();
+                    pdf.fromHTML($('#tablaOcultaPDF').get(0),10,10,{'width':180});
+                    pdf.autoPrint();
+                    pdf.output("dataurlnewwindow")
+                }
+
                 </script>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid">
