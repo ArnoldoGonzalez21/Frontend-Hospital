@@ -83,8 +83,7 @@
                 </main>
             </div>
             <script>
-
-                var pacientes = [];
+                let pacientes = [];
                 let xhrpac = new XMLHttpRequest();
                 var rutapac = "https://proyecto2-2021.herokuapp.com/obtener_paciente";
                 xhrpac.open('GET', rutapac);
@@ -93,7 +92,7 @@
                     pacientes = JSON.parse(xhrpac.responseText);
                 }
 
-                var doctores = [];
+                let doctores = [];
                 let xhrdoc = new XMLHttpRequest();
                 var rutadoc = "https://proyecto2-2021.herokuapp.com/obtener_doctor";
                 xhrdoc.open('GET', rutadoc);
@@ -102,30 +101,30 @@
                     doctores = JSON.parse(xhrdoc.responseText);
                 }
 
-                var citas;
+                var despues = `</select></form>`
                 let xhr = new XMLHttpRequest();
                 var ruta = "https://proyecto2-2021.herokuapp.com/obtener_cita";
                 xhr.open('GET', ruta);
-                xhr.send()
+                xhr.send() 
                 xhr.onreadystatechange = (e) => {
-                    citas = JSON.parse(xhr.responseText);
-                    var cuerpoDoc = "";
-                    var cuerpoPac = "";
+                    var citas = JSON.parse(xhr.responseText);             
                     for (var i = 0; i < citas.length; i++) {
+                        var cuerpoDoc = "";
+                        var cuerpoPac = ""; 
                         if(citas[i].estado == 1){
                             for(var k = 0; k < pacientes.length; k++){
-                                cuerpoPac += '<option value="'+k+'">'+pacientes[k].nombre +" "+ pacientes[k].apellido+'</option>';    
+                                if(citas[i].paciente = k){
+                                    cuerpoPac += '<option value="'+k+'">'+pacientes[k].nombre +" "+ pacientes[k].apellido+'</option>';    
+                                }
                             }
                             for(var j = 0; j < doctores.length; j++){
                                 cuerpoDoc += '<option value="'+j+'">'+doctores[j].nombre +" "+ doctores[j].apellido+'</option>';    
                             }
-                            cuerpoDoc += '</select></form>';
-                            cuerpoPac += '</select></form>'
-                            }
-                        }
-                        document.getElementById("inputPaciente").innerHTML = cuerpoPac;
-                        document.getElementById("inputMedico").innerHTML = cuerpoDoc;
+                        }               
                     }
+                    document.getElementById("inputPaciente").innerHTML = cuerpoPac + despues;
+                    document.getElementById("inputMedico").innerHTML = cuerpoDoc + despues;      
+                } 
 
                 function total_factura(){
                     var total = 0;
