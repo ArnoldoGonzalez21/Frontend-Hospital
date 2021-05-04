@@ -9,6 +9,7 @@
         <title>Generar Factura</title> 
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
     </head>
     <body class="bg-primary">
         <div id="layoutAuthentication">
@@ -70,7 +71,7 @@
                                                     <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0" >
                                                         <a class="btn btn-primary" onclick="generar_factura()">Generar</a>
                                                     </div> 
-                                                </span>                                          
+                                                </span>                                                                                         
                                             </form>
                                         </div>
                                     </div>
@@ -78,6 +79,7 @@
                             </div>
                         </div>
                     </div>
+                    <div class="table-responsive" id="tablaOcultaPDF" style="visibility: hidden;"></div>
                 </main>
             </div>
             <script>
@@ -167,9 +169,9 @@
                         .then(data=>{ return data.json()})
                         .then(res=>{console.log(res)
                             alert(res.mensaje)
-                            location.reload();
+                            crearPDF();
                         })
-                        .then(error=>console.log(error))
+                        .then(error=>console.log(error))                        
                     }else {
                         alert('Ingrese todos los Datos')
                     }
@@ -206,6 +208,45 @@
                     const fecha_con_formato = hoy+'/'+mesActual+'/'+añoActual;
                     console.log(fecha_con_formato);
                     $("#inputFechaHoy").val(fecha_con_formato); 
+                }
+
+                var antes = `<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Paciente</th>
+                            <th>Médico</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>`
+                    var despues = `</tbody>
+                </table>`
+                var entre = false;
+                function generar(){
+                    var comboPaciente = document.getElementById("inputPaciente");
+                    var selectedPaciente = comboPaciente.options[comboPaciente.selectedIndex].text;
+                    var comboDoctor = document.getElementById("inputMedico");
+                    var selectedDoctor= comboDoctor.options[comboDoctor.selectedIndex].text;
+                    var cuerpo = "";
+                    cuerpo += '<tr>';
+                    cuerpo += '<td>' + document.getElementById("inputFechaHoy").value + '</td>';
+                    cuerpo += '<td>' + selectedPaciente + '</td>';
+                    cuerpo += '<td>' + selectedDoctor + '</td>';
+                    cuerpo += '<td>' + document.getElementById("inputTotal").value  + '</td>';
+                    cuerpo += '</tr>';
+                    document.getElementById("tablaOcultaPDF").innerHTML = antes + cuerpo + despues;
+                    entre = true;
+                    crearPDF();
+                }
+                function crearPDF(){
+                    if(!entre){
+                    generar();
+                    }
+                    var pdf = new jsPDF();
+                    pdf.fromHTML($('#tablaOcultaPDF').get(0),10,10,{'width':180});
+                    pdf.autoPrint();
+                    pdf.output("dataurlnewwindow")
                 }   
 
             </script>

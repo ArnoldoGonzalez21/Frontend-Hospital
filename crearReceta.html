@@ -9,6 +9,7 @@
         <title>Crear Receta</title>     
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
     </head>
     <body class="bg-primary">
         <div id="layoutAuthentication">
@@ -60,6 +61,7 @@
                             </div>
                         </div>
                     </div>
+                    <div class="table-responsive" id="tablaOcultaPDF" style="visibility: hidden;"></div>
                 </main>
             </div>   
             <script>
@@ -115,7 +117,7 @@
                         .then(data=>{ return data.json()})
                         .then(res=>{console.log(res)
                             alert(res.mensaje)
-                            location.reload();
+                            crearPDF();
                         })
                         .then(error=>console.log(error))
                     }else {
@@ -159,6 +161,43 @@
                     console.log(fecha_con_formato);
                     $("#inputFechaHoy").val(fecha_con_formato); 
                 }
+                
+                var antes = `<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Paciente</th>
+                            <th>Padecimiento</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>`
+                    var despues = `</tbody>
+                </table>`
+                var entre = false;
+                function generar(){
+                    var comboPaciente = document.getElementById("inputPaciente");
+                    var selectedPaciente = comboPaciente.options[comboPaciente.selectedIndex].text;
+                    var cuerpo = "";
+                    cuerpo += '<tr>';
+                    cuerpo += '<td>' + document.getElementById("inputFechaHoy").value + '</td>';
+                    cuerpo += '<td>' + selectedPaciente + '</td>';
+                    cuerpo += '<td>' + document.getElementById("inputPadecimiento").value + '</td>';
+                    cuerpo += '<td>' + document.getElementById("inputDescripcion").value   + '</td>';
+                    cuerpo += '</tr>';
+                    document.getElementById("tablaOcultaPDF").innerHTML = antes + cuerpo + despues;
+                    entre = true;
+                    crearPDF();
+                }
+                function crearPDF(){
+                    if(!entre){
+                    generar();
+                    }
+                    var pdf = new jsPDF();
+                    pdf.fromHTML($('#tablaOcultaPDF').get(0),10,10,{'width':180});
+                    pdf.autoPrint();
+                    pdf.output("dataurlnewwindow")
+                }   
             </script>
             <div id="layoutAuthentication_footer">
                 <footer class="py-4 bg-light mt-auto">

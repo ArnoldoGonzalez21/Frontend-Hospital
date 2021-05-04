@@ -141,6 +141,7 @@
                         .then(data=>{ return data.json()})
                         .then(res=>{console.log(res)
                             alert(res.mensaje)
+                            location.reload();
                         })
                         .then(error=>console.log(error))
                     }

@@ -93,27 +93,28 @@
                 </span>`
                 const indicePaciente = getParametro('indice');
                 var total = 0;
+                var medicamentos;
                 var subtotal = [];
                 let xhr = new XMLHttpRequest();
                 var ruta = "https://proyecto2-2021.herokuapp.com/obtener_medicamento";
                 xhr.open('GET', ruta);
                 xhr.send()
                 xhr.onreadystatechange = (e) => {
-                    var medicamentos = JSON.parse(xhr.responseText);
+                    medicamentos = JSON.parse(xhr.responseText);
                     var cuerpo = "";
                     var cuerpo2 = "";
                     for (var i = 0; i < medicamentos.length; i++) {
-                        if(parseInt(medicamentos[i].venta) > 0){                            
-                            if(medicamentos[i].venta > 0 && medicamentos[i].paciente == indicePaciente){
-                                subtotal[i] = parseInt(medicamentos[i].venta) * parseFloat(medicamentos[i].precio);
+                        if(parseInt(medicamentos[i].compra) > 0){                            
+                            if(medicamentos[i].compra > 0 && medicamentos[i].paciente == indicePaciente){
+                                subtotal[i] = parseInt(medicamentos[i].compra) * parseFloat(medicamentos[i].precio);
                                 cuerpo += '<tr>';
                                 cuerpo2 += '<tr>';
                                 cuerpo += '<td>' + medicamentos[i].nombre + '</td>';
                                 cuerpo2 += '<td>' + medicamentos[i].nombre + '</td>';
                                 cuerpo += '<td>' + medicamentos[i].precio + '</td>';
                                 cuerpo2 += '<td>' + medicamentos[i].precio + '</td>';
-                                cuerpo += '<td>' + medicamentos[i].venta + '</td>';
-                                cuerpo2 += '<td>' + medicamentos[i].venta + '</td>';
+                                cuerpo += '<td>' + medicamentos[i].compra + '</td>';
+                                cuerpo2 += '<td>' + medicamentos[i].compra + '</td>';
                                 cuerpo += '<td>' + subtotal[i] + '</td>';
                                 cuerpo2 += '<td>' + subtotal[i] + '</td>';
                                 total += subtotal[i];
@@ -130,7 +131,7 @@
                     cuerpo2 += '<td></td><td></td>';
                     cuerpo2 += '<td><b>Total</b></td>'
                     cuerpo2 += '<td>'+total/2+'</td>';
-                    cuerpo += '</tr>';
+                    cuerpo2 += '</tr>';
                     document.getElementById("tablaMedicamento").innerHTML = antes + cuerpo + despues;
                     document.getElementById("tablaOcultaPDF").innerHTML = antes + cuerpo2 + despuesPdf;
                 }
@@ -167,7 +168,27 @@
                     window.location.href = "comprarMedicamento.html?indice="+indice;         
                 }
 
+                function eliminar_compra(){
+                    var ruta = "https://proyecto2-2021.herokuapp.com/eliminar_compra";
+                    const datos = JSON.stringify({
+                        paciente: indicePaciente,
+                    })
+                    const parametros={
+                            headers:{
+                            'content-type':'application/json; charset=utf-8'
+                        },
+                        body: datos,
+                        method: 'POST',
+                    };
+                    fetch(ruta,parametros)
+                    .then(data=>{ return data.json()})
+                    .then(res=>{console.log(res)    
+                    })
+                    .then(error=>console.log(error))
+                }               
+
                 function crearPDF(){
+                    eliminar_compra();
                     var pdf = new jsPDF();
                     pdf.fromHTML($('#tablaOcultaPDF').get(0),10,10,{'width':180});
                     pdf.autoPrint();
