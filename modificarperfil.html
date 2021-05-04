@@ -117,13 +117,15 @@
                     $("#inputTelefono").val(telefono_personal);
                 }
 
-                async function editar_perfil() {
+                async function editar_perfil(){
                     if(validar_ingreso()){
                         var status = getParametro('status'); // paciente doctor enfermera
                         var indiceURl = getParametro("indice");
+                        var rutaEditar = "https://proyecto2-2021.herokuapp.com/editar_"+status;
                         var combo = document.getElementById("inputSexo");
                         var selected = combo.options[combo.selectedIndex].text;
-                        let json = JSON.stringify({
+                        console.log(selected)
+                        const datos = JSON.stringify({
                             indice: indiceURl,
                             nombre: document.getElementById("inputNombre").value,
                             apellido: document.getElementById("inputApellido").value,
@@ -133,18 +135,28 @@
                             contrasena: document.getElementById("inputPassword").value,
                             telefono: document.getElementById("inputTelefono").value,
                         })
-                        let respuesta = await fetch("https://proyecto2-2021.herokuapp.com/editar_"+status, {
+                        const parametros={
+                            headers:{
+                                'content-type':'application/json; charset=utf-8'
+                            },
+                            body: datos,
                             method: 'POST',
-                            body: json,
-                            headers: { 'Content-Type': 'application/json' }
-                        }).catch(function (error) {
-                            console.log(error)
-                        });
-                        window.location.href = status+".html?indice="+indiceURl;
-                    }else{
-                        alert('Ingrese todos los Datos')
+                        };
+                        fetch(rutaEditar,parametros)
+                        .then(data=>{ return data.json()})
+                        .then(res=>{console.log(res)
+                            alert(res.mensaje);
+                            if(res.agregado == 1){
+                                window.location.href = status+".html?indice="+indiceURl;
+                            }else{
+                                location.reload();
+                            }
+                        })
+                        .then(error=>console.log(error))
+                        }else {
+                            alert('Ingrese todos los Datos')
+                        }
                     }
-                }
 
                 function validar_ingreso(){
                     if(validar_tamano_contrasena()){
