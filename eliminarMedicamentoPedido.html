@@ -10,7 +10,7 @@
                 posicionMedicamento = getParametro("posicion");
                 let json = JSON.stringify({
                     indice: posicionMedicamento,
-                    venta: getParametro("venta"),
+                    venta: getParametro("compra"),
                     paciente: -1,
                 })
                 let respuesta = await fetch("https://proyecto2-2021.herokuapp.com/eliminar_medicamento_pedido",{
