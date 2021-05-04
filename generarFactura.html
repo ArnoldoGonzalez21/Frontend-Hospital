@@ -79,7 +79,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive" id="tablaOcultaPDF" style="visibility: hidden;"></div>
+                    <div class="table-responsive" id="tablaOcultaPDF" ></div>
                 </main>
             </div>
             <script>
@@ -213,10 +213,8 @@
                 var antes = `<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Fecha</th>
-                            <th>Paciente</th>
-                            <th>Médico</th>
-                            <th>Total</th>
+                            <th>Factura</th>
+                            <th>  </th>
                         </tr>
                     </thead>
                     <tbody>`
@@ -229,12 +227,14 @@
                     var comboDoctor = document.getElementById("inputMedico");
                     var selectedDoctor= comboDoctor.options[comboDoctor.selectedIndex].text;
                     var cuerpo = "";
-                    cuerpo += '<tr>';
-                    cuerpo += '<td>' + document.getElementById("inputFechaHoy").value + '</td>';
-                    cuerpo += '<td>' + selectedPaciente + '</td>';
-                    cuerpo += '<td>' + selectedDoctor + '</td>';
-                    cuerpo += '<td>' + document.getElementById("inputTotal").value  + '</td>';
-                    cuerpo += '</tr>';
+                    cuerpo += '<tr><td>Fecha</td>'
+                    cuerpo += '<td>' + document.getElementById("inputFechaHoy").value + '</td></tr>';
+                    cuerpo += '<tr><td>Paciente</td>'
+                    cuerpo += '<td>' + selectedPaciente + '</td></tr>';
+                    cuerpo += '<tr><td>Doctor</td>'
+                    cuerpo += '<td>' + selectedDoctor + '</td></tr>';
+                    cuerpo += '<tr><td>Total (Q)</td>'
+                    cuerpo += '<td>' + document.getElementById("inputTotal").value  + '</td></tr>';
                     document.getElementById("tablaOcultaPDF").innerHTML = antes + cuerpo + despues;
                     entre = true;
                     crearPDF();

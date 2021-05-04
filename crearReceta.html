@@ -165,10 +165,8 @@
                 var antes = `<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Fecha</th>
-                            <th>Paciente</th>
-                            <th>Padecimiento</th>
-                            <th>Descripción</th>
+                            <th>Receta</th>
+                            <th> </th>
                         </tr>
                     </thead>
                     <tbody>`
@@ -179,12 +177,14 @@
                     var comboPaciente = document.getElementById("inputPaciente");
                     var selectedPaciente = comboPaciente.options[comboPaciente.selectedIndex].text;
                     var cuerpo = "";
-                    cuerpo += '<tr>';
-                    cuerpo += '<td>' + document.getElementById("inputFechaHoy").value + '</td>';
-                    cuerpo += '<td>' + selectedPaciente + '</td>';
-                    cuerpo += '<td>' + document.getElementById("inputPadecimiento").value + '</td>';
-                    cuerpo += '<td>' + document.getElementById("inputDescripcion").value   + '</td>';
-                    cuerpo += '</tr>';
+                    cuerpo += '<tr><td>Fecha</td>';
+                    cuerpo += '<td>' + document.getElementById("inputFechaHoy").value + '</td></tr>';
+                    cuerpo += '<tr><td>Paciente</td>'
+                    cuerpo += '<td>' + selectedPaciente + '</td></tr>';
+                    cuerpo += '<tr><td>Padecimiento</td>'
+                    cuerpo += '<td>' + document.getElementById("inputPadecimiento").value + '</td></tr>';
+                    cuerpo += '<tr><td>Descripción</td>'
+                    cuerpo += '<td>' + document.getElementById("inputDescripcion").value   + '</td></tr>';
                     document.getElementById("tablaOcultaPDF").innerHTML = antes + cuerpo + despues;
                     entre = true;
                     crearPDF();
